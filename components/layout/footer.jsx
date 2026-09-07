@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { APP_NAME, APP_DISCLAIMER } from "@/lib/config";
+import { Github } from "lucide-react";
 
 export function Footer() {
   return (
@@ -14,18 +15,29 @@ export function Footer() {
           </p>
         </div>
 
-        <div className="flex items-center gap-6 text-xs text-text-secondary">
+        <div className="flex items-center gap-4 sm:gap-6 text-xs text-text-secondary flex-wrap justify-center sm:justify-end">
           <Link href="/multi-view" className="hover:text-brand-gold transition-colors">
             Multi View
           </Link>
           <span className="text-border">•</span>
-          <span className="hover:text-text-primary cursor-pointer transition-colors">
+          <Link href="/terms" className="hover:text-brand-gold transition-colors">
             Terms
-          </span>
+          </Link>
           <span className="text-border">•</span>
-          <span className="hover:text-text-primary cursor-pointer transition-colors">
+          <Link href="/privacy" className="hover:text-brand-gold transition-colors">
             Privacy
-          </span>
+          </Link>
+          <span className="text-border">•</span>
+          <a
+            href="https://github.com/AmitDeka/StreamView"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 hover:text-white transition-colors"
+            title="GitHub Repository"
+          >
+            <Github className="w-3.5 h-3.5" />
+            <span>GitHub</span>
+          </a>
         </div>
       </div>
     </footer>

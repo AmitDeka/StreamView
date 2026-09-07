@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { APP_NAME } from "@/lib/config";
-import { LayoutGrid, Radio, Sparkles } from "lucide-react";
+import { LayoutGrid, Github } from "lucide-react";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -55,6 +55,17 @@ export function Navbar() {
             <LayoutGrid className="w-4 h-4" />
             <span>Multi View</span>
           </Link>
+
+          <a
+            href="https://github.com/AmitDeka/StreamView"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="View StreamView on GitHub"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-white bg-surface-elevated/70 hover:bg-surface-elevated border border-border/70 hover:border-border transition-all"
+          >
+            <Github className="w-4 h-4" />
+            <span className="hidden sm:inline">GitHub</span>
+          </a>
         </nav>
       </div>
     </header>

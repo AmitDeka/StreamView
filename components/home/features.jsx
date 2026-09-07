@@ -10,9 +10,9 @@ const FEATURES_LIST = [
   },
   {
     icon: LayoutGrid,
-    title: "Adaptive 1–6 Stream Layouts",
+    title: "Stage View & Equal Grid",
     description:
-      "Choose from single, split 2-stream, 3-stream, 2x2 grid, or 6-stream layouts. Fully responsive and optimized for ultra-wide desktop monitors, laptops, and mobile screens.",
+      "Choose between Stage View with instant Swap to feature any stream on the main stage, or balanced Equal Grid (50/50, 33%, 2x2, up to 6 streams). Fully responsive on monitors and mobile.",
     accent: "brand-orange",
   },
   {
