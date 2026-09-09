@@ -6,6 +6,15 @@ import { APP_NAME, APP_TAGLINE, APP_DESCRIPTION } from "@/lib/config";
 export const metadata = {
   title: `${APP_NAME} - ${APP_TAGLINE}`,
   description: APP_DESCRIPTION,
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: [
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+  },
 };
 
 export default function RootLayout({ children }) {

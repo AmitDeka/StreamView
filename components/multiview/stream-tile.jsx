@@ -3,16 +3,40 @@
 import { KickPlayer } from "@/components/kick/kick-player";
 import { useMultiView } from "./multiview-context";
 import { KICK_CHANNEL_BASE_URL } from "@/lib/config";
-import { X, ExternalLink } from "lucide-react";
+import { X, ExternalLink, Volume2, VolumeX } from "lucide-react";
 
 export function StreamTile({ stream, index, isSolo = false }) {
-  const { removeStream } = useMultiView();
+  const {
+    removeStream,
+    activeAudioId,
+    setActiveAudioId,
+    selectedStreams,
+  } = useMultiView();
 
   if (!stream) return null;
 
+  // In Equal View, only 1 player has audio active by default (matching the 3:1 stage view)
+  const effectiveAudioId = activeAudioId === "__muted_all__"
+    ? null
+    : (activeAudioId || selectedStreams[0]?.id || selectedStreams[0]?.channelName);
+
+  const isAudioActive = isSolo || (effectiveAudioId && (stream.id === effectiveAudioId || stream.channelName === effectiveAudioId));
+
+  const toggleAudio = () => {
+    if (isAudioActive) {
+      setActiveAudioId("__muted_all__");
+    } else {
+      setActiveAudioId(stream.id || stream.channelName);
+    }
+  };
+
   return (
     <div
-      className={`group relative flex flex-col rounded-xl overflow-hidden bg-surface-card border border-border/80 transition-all ${
+      className={`group relative flex flex-col rounded-xl overflow-hidden bg-surface-card border transition-all duration-200 ${
+        isAudioActive
+          ? "border-brand-gold/70 shadow-glow-gold/20"
+          : "border-border/80 hover:border-border"
+      } ${
         isSolo ? "w-full h-full min-h-[70vh]" : "w-full"
       }`}
     >
@@ -34,7 +58,37 @@ export function StreamTile({ stream, index, isSolo = false }) {
         </div>
 
         {/* Minimal Outer Controls */}
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-1.5 shrink-0">
+          {/* Quick Audio Switcher Button */}
+          {!isSolo && (
+            <button
+              type="button"
+              onClick={toggleAudio}
+              title={
+                isAudioActive
+                  ? "Audio Active · Click to Mute"
+                  : `Listen to ${stream.channelName} (Mutes other streams)`
+              }
+              className={`flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
+                isAudioActive
+                  ? "bg-brand-gold text-black shadow-sm"
+                  : "bg-surface-card hover:bg-surface-elevated text-text-muted hover:text-brand-gold border border-border/70 hover:border-brand-gold/40"
+              }`}
+            >
+              {isAudioActive ? (
+                <>
+                  <Volume2 className="w-3 h-3 stroke-[2.5]" />
+                  <span>Audio On</span>
+                </>
+              ) : (
+                <>
+                  <VolumeX className="w-3 h-3" />
+                  <span>Listen</span>
+                </>
+              )}
+            </button>
+          )}
+
           {/* Open on Kick */}
           <a
             href={`${KICK_CHANNEL_BASE_URL}/${stream.channelName}`}
@@ -62,7 +116,7 @@ export function StreamTile({ stream, index, isSolo = false }) {
 
       {/* Official Kick Video Player Iframe */}
       <div className="relative aspect-video w-full bg-black">
-        <KickPlayer channel={stream.channelName} />
+        <KickPlayer channel={stream.channelName} muted={!isAudioActive} />
       </div>
 
       {/* Stream Meta Footer */}

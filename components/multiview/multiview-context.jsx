@@ -17,6 +17,7 @@ export function MultiViewProvider({ children }) {
   const [maximizedStreamId, setMaximizedStreamId] = useState(null);
   const [targetSlotIndex, setTargetSlotIndex] = useState(null);
   const [viewMode, setViewMode] = useState("stage"); // "stage" (featured left + right tiles) or "grid"
+  const [activeAudioId, setActiveAudioId] = useState(null);
 
   // Restore session from localStorage on mount
   useEffect(() => {
@@ -130,6 +131,9 @@ export function MultiViewProvider({ children }) {
     if (maximizedStreamId === streamId) {
       setMaximizedStreamId(null);
     }
+    if (activeAudioId === streamId) {
+      setActiveAudioId(null);
+    }
   };
 
   const openDrawer = ({ referenceIndex = 0, filter = "", slotIndex = null } = {}) => {
@@ -152,6 +156,7 @@ export function MultiViewProvider({ children }) {
   const clearAllStreams = () => {
     setSelectedStreams([]);
     setMaximizedStreamId(null);
+    setActiveAudioId(null);
   };
 
   const focusStream = (streamId) => {
@@ -184,6 +189,8 @@ export function MultiViewProvider({ children }) {
         targetSlotIndex,
         viewMode,
         setViewMode,
+        activeAudioId,
+        setActiveAudioId,
         focusStream,
         addStream,
         removeStream,

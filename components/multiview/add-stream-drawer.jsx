@@ -4,7 +4,8 @@ import { useState, useEffect, useTransition } from "react";
 import { useMultiView } from "./multiview-context";
 import { StreamCard } from "./stream-card";
 import { extractDiscoverySignals } from "@/lib/discovery/signals";
-import { X, Search, Sparkles, Hash, Gamepad2, Loader2, Check, Radio } from "lucide-react";
+import { TRENDING_TAGS } from "@/lib/config";
+import { X, Search, Sparkles, Hash, Gamepad2, Loader2, Check, Radio, Flame, User } from "lucide-react";
 
 export function AddStreamDrawer() {
   const {
@@ -25,42 +26,53 @@ export function AddStreamDrawer() {
   const [errorMsg, setErrorMsg] = useState("");
   const [isPending, startTransition] = useTransition();
 
-  // Extract signals from active reference stream
-  const signals = extractDiscoverySignals(activeReferenceStream);
+  // First streamer (reference stream is selectedStreams[0] or activeReferenceStream)
+  const firstStream = selectedStreams[0] || activeReferenceStream;
 
-  // Synchronize initial filter from context when drawer opens
+  // Extract signals from active reference stream
+  const signals = extractDiscoverySignals(firstStream);
+
+  // Synchronize initial filter: automatically extract hashtag or category from first streamer when drawer opens
   useEffect(() => {
     if (isDrawerOpen) {
-      setActiveFilter(activeDrawerFilter || "");
       setSearchQuery("");
+      const first = selectedStreams[0] || activeReferenceStream;
+      const firstSignals = extractDiscoverySignals(first);
+      const firstHashtag = firstSignals.hashtags.length > 0 ? firstSignals.hashtags[0] : "";
+      const defaultFilter = activeDrawerFilter || firstHashtag || firstSignals.category || "";
+      setActiveFilter(defaultFilter);
     }
   }, [isDrawerOpen, activeDrawerFilter]);
 
-  // Fetch streams (debounced) whenever searchQuery, activeFilter, or activeReferenceStream changes
+  // Fetch streams (debounced) whenever searchQuery or activeFilter changes
   useEffect(() => {
     if (!isDrawerOpen) return;
 
     let isMounted = true;
-    setIsLoading(true);
     setErrorMsg("");
+    setIsLoading(true);
+
+    const hasSearch = Boolean(searchQuery.trim());
+    const hasFilter = Boolean(activeFilter.trim());
 
     const timeout = setTimeout(async () => {
       try {
         const excludeList = selectedStreams.map((s) => s.channelName);
         
         let url = "";
-        if (searchQuery.trim()) {
+        if (hasSearch) {
           url = `/api/kick/search?q=${encodeURIComponent(searchQuery.trim())}&exclude=${encodeURIComponent(
             excludeList.join(",")
           )}`;
-        } else if (activeReferenceStream) {
+        } else if (hasFilter) {
+          const refChannel = firstStream?.channelName || activeReferenceStream?.channelName || "";
           url = `/api/kick/related?channel=${encodeURIComponent(
-            activeReferenceStream.channelName
+            refChannel
           )}&filter=${encodeURIComponent(activeFilter)}&exclude=${encodeURIComponent(
             excludeList.join(",")
           )}`;
         } else {
-          url = `/api/kick/streams?limit=20`;
+          url = `/api/kick/search?q=&exclude=${encodeURIComponent(excludeList.join(","))}`;
         }
 
         const res = await fetch(url);
@@ -71,7 +83,7 @@ export function AddStreamDrawer() {
           const list = json.data || [];
           setStreams(list);
           if (list.length === 0) {
-            setErrorMsg("Couldn't find any live streams matching this criteria.");
+            setErrorMsg(`No live streams found matching "${searchQuery.trim() || activeFilter}".`);
           }
         }
       } catch (err) {
@@ -89,7 +101,7 @@ export function AddStreamDrawer() {
       isMounted = false;
       clearTimeout(timeout);
     };
-  }, [isDrawerOpen, searchQuery, activeFilter, activeReferenceStream, selectedStreams]);
+  }, [isDrawerOpen, searchQuery, activeFilter, firstStream, activeReferenceStream, selectedStreams]);
 
   if (!isDrawerOpen) return null;
 
@@ -145,6 +157,7 @@ export function AddStreamDrawer() {
                 </span>
               </div>
 
+              {/* Reference Stream Details */}
               <div className="flex items-center gap-3">
                 <img
                   src={activeReferenceStream.avatarUrl}
@@ -166,12 +179,32 @@ export function AddStreamDrawer() {
                 </div>
               </div>
 
+              {/* Auto-matching notification when hashtag filter is active */}
+              {activeFilter && activeFilter.startsWith("#") && (
+                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-brand-orange/15 border border-brand-orange/40 text-xs text-brand-orange">
+                  <Sparkles className="w-3.5 h-3.5 shrink-0 text-brand-gold animate-pulse" />
+                  <span className="truncate">
+                    Auto-filtering by first streamer&apos;s hashtag:{" "}
+                    <strong className="font-bold text-white font-mono bg-black/40 px-1.5 py-0.5 rounded border border-brand-orange/30">
+                      {activeFilter}
+                    </strong>
+                  </span>
+                </div>
+              )}
+
               {/* Contextual Discovery Signals Chips */}
               {signals.suggestedChips.length > 0 && (
                 <div className="pt-2 border-t border-border/40">
-                  <span className="text-[10px] font-semibold text-text-muted uppercase block mb-1.5">
-                    Related to this stream:
-                  </span>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-semibold text-text-muted uppercase">
+                      First Streamer Signals:
+                    </span>
+                    {activeFilter && (
+                      <span className="text-[10px] text-brand-gold font-medium">
+                        Active: <span className="font-bold">{activeFilter}</span>
+                      </span>
+                    )}
+                  </div>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     {/* All option */}
                     <button
@@ -199,7 +232,7 @@ export function AddStreamDrawer() {
                           }}
                           className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-md font-medium transition-all ${
                             isChipActive
-                              ? "bg-brand-orange text-white font-bold shadow-sm"
+                              ? "bg-brand-orange text-white font-bold shadow-sm ring-1 ring-brand-gold/60"
                               : "bg-surface-elevated text-text-primary hover:border-brand-orange/50 border border-border/70"
                           }`}
                         >
@@ -224,8 +257,11 @@ export function AddStreamDrawer() {
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search streamers, games or tags (e.g. #yatraroleplay)..."
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                if (activeFilter) setActiveFilter("");
+              }}
+              placeholder="Search by username (e.g. xqc), category (GTA V), or #hashtag..."
               className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface-card border border-border/80 focus:border-brand-gold focus:outline-none focus:ring-1 focus:ring-brand-gold/60 text-sm text-text-primary placeholder:text-text-muted"
             />
             {searchQuery && (
@@ -239,17 +275,43 @@ export function AddStreamDrawer() {
             )}
           </div>
 
+          {/* Quick Trending Tags */}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-[10px] font-bold text-text-muted uppercase flex items-center gap-1 mr-1">
+              <Flame className="w-3 h-3 text-brand-orange" />
+              Trending:
+            </span>
+            {TRENDING_TAGS.slice(0, 6).map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => {
+                  setSearchQuery(tag);
+                  setActiveFilter("");
+                }}
+                className="text-[11px] px-2.5 py-0.5 rounded-full bg-surface-card hover:bg-surface-hover text-text-secondary hover:text-white border border-border/70 hover:border-brand-gold/50 transition-colors cursor-pointer"
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+
           {/* Results List */}
           <div>
             <div className="flex items-center justify-between mb-2.5">
-              <span className="text-xs font-bold uppercase tracking-wider text-text-muted">
-                {searchQuery
-                  ? "Search Results"
-                  : activeFilter
-                  ? `Streams matching "${activeFilter}"`
-                  : activeReferenceStream
-                  ? "Recommended Related Streams"
-                  : "Live Streams"}
+              <span className="text-xs font-bold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
+                {searchQuery ? (
+                  `Results for "${searchQuery}"`
+                ) : activeFilter && activeFilter.startsWith("#") ? (
+                  <>
+                    <Hash className="w-3.5 h-3.5 text-brand-gold" />
+                    <span>Live streams with <span className="text-brand-gold font-bold font-mono">{activeFilter}</span></span>
+                  </>
+                ) : activeFilter ? (
+                  `Live streams in "${activeFilter}"`
+                ) : (
+                  "Live Related Streams"
+                )}
               </span>
               <span className="text-xs text-text-muted font-mono">
                 {streams.length} live
@@ -257,50 +319,43 @@ export function AddStreamDrawer() {
             </div>
 
             {isLoading ? (
-              <div className="py-12 flex flex-col items-center justify-center text-text-muted gap-3">
-                <Loader2 className="w-7 h-7 animate-spin text-brand-orange" />
-                <span className="text-xs font-medium">Scanning live Kick streams...</span>
-              </div>
-            ) : errorMsg ? (
-              <div className="py-10 px-4 rounded-xl bg-surface-card border border-border text-center space-y-2">
-                <p className="text-sm text-text-secondary">{errorMsg}</p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSearchQuery("");
-                    setActiveFilter("");
-                  }}
-                  className="text-xs text-brand-gold hover:underline"
-                >
-                  Clear filters & view trending streams
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {streams.map((stream) => {
-                  const isSelected = selectedStreams.some(
-                    (s) => s.id === stream.id || s.channelName.toLowerCase() === stream.channelName.toLowerCase()
-                  );
+                <div className="py-12 flex flex-col items-center justify-center text-text-muted gap-3">
+                  <Loader2 className="w-7 h-7 animate-spin text-brand-gold" />
+                  <span className="text-xs font-medium">Searching Kick for &quot;{searchQuery || activeFilter}&quot;...</span>
+                </div>
+              ) : errorMsg ? (
+                <div className="py-10 px-4 rounded-xl bg-surface-card border border-border text-center space-y-2">
+                  <p className="text-sm text-text-secondary">{errorMsg}</p>
+                  <p className="text-xs text-text-muted">
+                    Make sure the username is spelled correctly, or try searching by category or hashtag above.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {streams.map((stream) => {
+                    const isSelected = selectedStreams.some(
+                      (s) => s.id === stream.id || s.channelName.toLowerCase() === stream.channelName.toLowerCase()
+                    );
 
-                  return (
-                    <StreamCard
-                      key={stream.id || stream.channelName}
-                      stream={stream}
-                      isSelected={isSelected}
-                      disabled={!isSelected && isFull}
-                      onSelect={(st) => {
-                        if (isSelected) {
-                          removeStream(st.id);
-                        } else {
-                          addStream(st);
-                        }
-                      }}
-                    />
-                  );
-                })}
-              </div>
-            )}
-          </div>
+                    return (
+                      <StreamCard
+                        key={stream.id || stream.channelName}
+                        stream={stream}
+                        isSelected={isSelected}
+                        disabled={!isSelected && isFull}
+                        onSelect={(st) => {
+                          if (isSelected) {
+                            removeStream(st.id);
+                          } else {
+                            addStream(st);
+                          }
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+            </div>
         </div>
 
         {/* Footer */}

@@ -61,10 +61,10 @@ export function Navbar() {
             target="_blank"
             rel="noopener noreferrer"
             title="View StreamView on GitHub"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-white bg-surface-elevated/70 hover:bg-surface-elevated border border-border/70 hover:border-border transition-all"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-white bg-surface-elevated/70 hover:bg-surface-elevated border border-border/70 hover:border-border transition-all"
           >
             <Github className="w-4 h-4" />
-            <span className="hidden sm:inline">GitHub</span>
+            <span>GitHub</span>
           </a>
         </nav>
       </div>

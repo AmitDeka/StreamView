@@ -141,8 +141,8 @@ export function MultiViewWorkspace() {
 
               {/* Right Section: Layout Option, Reset, and Add Stream */}
               <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap self-end lg:self-auto">
-                {/* User's sketch: Layout Option */}
-                <div className="flex items-center bg-surface-elevated p-1 rounded-xl border border-border/70">
+                {/* User's sketch: Layout Option (Desktop/Tablet >= 1024px) */}
+                <div className="hidden lg:flex items-center bg-surface-elevated p-1 rounded-xl border border-border/70">
                   <button
                     type="button"
                     onClick={() => setViewMode("stage")}

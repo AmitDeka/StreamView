@@ -1,4 +1,4 @@
-﻿# StreamView 🎥
+# StreamView 🎥
 
 > **Watch Multiple Kick Streams Together in an Adaptive Multi View Interface**
 
@@ -54,7 +54,7 @@ StreamView is a modern, open-source web application designed for gaming enthusia
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) with custom dark gaming theme
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Class Utilities**: `clsx`, `tailwind-merge`
-- **Data Fetching**: Native Fetch API with server-side proxying & fallback mock data
+- **Data Fetching**: Native Fetch API with direct Kick live channel & stream integration
 
 ---
 
@@ -85,7 +85,7 @@ StreamView/
 │   └── multiview/                  # Stage View, Grid, Drawer, Workspace
 ├── lib/
 │   ├── discovery/                  # Hashtag regex & contextual rankers
-│   ├── kick/                       # Kick API client, mock data, and search
+│   ├── kick/                       # Kick API client, streams, and search
 │   ├── config.js                   # Application constants & layout options
 │   ├── use-fullscreen.js           # HTML5 Fullscreen API hook
 │   └── utils.js                    # Tailwind class utilities
@@ -120,12 +120,12 @@ npm install
 Create a `.env.local` file in the root directory:
 
 ```env
-# Optional: Official Kick API credentials (falls back to realistic mock dataset if omitted)
+# Optional: Official Kick API credentials (for global livestreams indexing)
 KICK_CLIENT_ID=your_client_id_here
 KICK_CLIENT_SECRET=your_client_secret_here
 ```
 
-> *Note: If credentials are not provided, StreamView runs smoothly using realistic GTA V RP mock streams with hashtag discovery.*
+> *Note: Even without API credentials, StreamView directly queries Kick's live channel APIs to fetch real streamer profiles and stream embeds on demand.*
 
 ### 4. Run Development Server
 

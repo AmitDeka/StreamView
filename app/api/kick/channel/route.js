@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
+import { kickFetch } from "@/lib/kick/client";
 
 export async function GET(request) {
   try {
@@ -16,12 +17,8 @@ export async function GET(request) {
 
     const cleanName = channelName.trim().toLowerCase();
 
-    const res = await fetch(`https://kick.com/api/v2/channels/${encodeURIComponent(cleanName)}`, {
-      headers: {
-        "User-Agent": "Mozilla/5.0",
-        Accept: "application/json",
-      },
-      next: { revalidate: 30 },
+    const res = await kickFetch(`https://kick.com/api/v2/channels/${encodeURIComponent(cleanName)}`, {
+      timeout: 3500,
     });
 
     if (!res.ok) {
@@ -38,7 +35,11 @@ export async function GET(request) {
 
     const data = await res.json();
     const avatarUrl = data.user?.profile_pic || data.user?.profilepic || null;
-    const isLive = Boolean(data.livestream);
+    const hasLiveThumbnail = Boolean(data.livestream?.thumbnail?.url);
+    const startTime = new Date(data.livestream?.start_time || data.livestream?.created_at || "").getTime();
+    const isRecentStart = !isNaN(startTime) && (Date.now() - startTime < 10 * 60 * 1000);
+    const isLive = Boolean(data.livestream?.is_live && (hasLiveThumbnail || isRecentStart));
+
     const viewerCount =
       isLive && typeof data.livestream?.viewer_count === "number"
         ? data.livestream.viewer_count

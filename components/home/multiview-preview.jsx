@@ -140,7 +140,7 @@ export function MultiViewPreview() {
           <div className="flex items-center justify-between p-2 rounded-lg bg-black/40 border border-border/40 text-xs gap-2">
             <div className="flex items-center gap-2 min-w-0">
               <div className="w-5 h-5 rounded-full bg-surface-elevated border border-border flex items-center justify-center shrink-0">
-                <User className="w-3 h-3 text-text-muted" />
+                <User className="w-3.5 h-3.5 text-text-muted" />
               </div>
               <span className="font-semibold text-text-secondary truncate text-[11px]">
                 Demo_Partner

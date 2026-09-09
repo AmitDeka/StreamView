@@ -72,15 +72,29 @@ export function StageView() {
   // Responsive height for right scrollable container:
   // - After adding 6 streams: Expands to 82vh (capped at 760px on large displays) so the 3-row, 5-card grid is comfortable
   // - 1 to 5 streams: Strictly synced to the Left Stage height
+  // Responsive height for right scrollable container:
+  // - On Mobile: Auto height with smooth horizontal scrolling strip
+  // - On Desktop (lg:): Synced to Left Stage height or 82vh when 6 streams
   const rightHeightClass = isSixStreams
-    ? "max-h-[85vh] lg:h-[82vh] lg:max-h-[82vh] xl:max-h-[760px]"
-    : "max-h-[85vh] lg:h-[var(--stage-height)] lg:max-h-[var(--stage-height)]";
+    ? "h-auto max-h-none lg:h-[82vh] lg:max-h-[82vh] xl:max-h-[760px]"
+    : "h-auto max-h-none lg:h-[var(--stage-height)] lg:max-h-[var(--stage-height)]";
 
   return (
     <div
       style={{ "--stage-height": stageHeight ? `${stageHeight}px` : "auto" }}
       className="w-full flex flex-col lg:flex-row gap-4 lg:items-start justify-center my-auto"
     >
+      {/* Mobile Mode Notice Pill (< lg screens) */}
+      <div className="flex lg:hidden items-center justify-between px-3.5 py-2 rounded-xl bg-surface-card border border-border/70 text-[11px] text-text-muted mb-1 w-full">
+        <span className="flex items-center gap-1.5 font-medium text-text-secondary">
+          <span>📱</span>
+          <span>Mobile Multi View: Tap any streamer card to swap onto main player</span>
+        </span>
+        <span className="text-brand-gold font-semibold text-[10px] shrink-0">
+          6 streams on desktop
+        </span>
+      </div>
+
       {/* LEFT: Featured Main Stream (Stage) */}
       <div className={`${leftWidthClass} flex flex-col transition-all duration-300`}>
         <div
@@ -153,13 +167,30 @@ export function StageView() {
         </div>
       </div>
 
-      {/* RIGHT: Secondary Streams (Scrollable with distinct container color, Cards Only) */}
+      {/* RIGHT: Secondary Streams (Adaptive: Horizontal Switcher Strip on Mobile, Live Embeds on Desktop) */}
       <div
-        className={`${rightWidthClass} flex flex-col gap-3 ${rightHeightClass} overflow-y-auto p-3 rounded-2xl bg-[#180A12]/90 border border-border/70 border-l-4 border-l-brand-gold/80 visible-scroll-container shadow-xl transition-all duration-300`}
+        className={`${rightWidthClass} flex flex-col gap-2.5 ${rightHeightClass} overflow-y-auto p-3 rounded-2xl bg-[#180A12]/90 border border-border/70 border-l-4 border-l-brand-gold/80 visible-scroll-container shadow-xl transition-all duration-300`}
       >
-        {/* When 4 to 6 streams: arrange in a 2-column grid. When 1 to 3 streams: single column (3:1 ratio) */}
+        {/* Mobile Header / Quick Switcher Label */}
         {sideStreams.length > 0 && (
-          <div className={isFourToSix ? "grid grid-cols-1 sm:grid-cols-2 gap-3" : "flex flex-col gap-3"}>
+          <div className="flex lg:hidden items-center justify-between px-1 text-xs">
+            <span className="font-bold text-text-primary flex items-center gap-1.5">
+              <span>Stream Switcher</span>
+              <span className="text-[10px] text-brand-gold font-mono">({sideStreams.length} standby)</span>
+            </span>
+            <span className="text-[10px] text-text-muted">Tap card to watch on main</span>
+          </div>
+        )}
+
+        {/* When 4 to 6 streams: arrange in a 2-column grid on desktop. On mobile: horizontal swipeable strip */}
+        {sideStreams.length > 0 && (
+          <div
+            className={
+              isFourToSix
+                ? "flex flex-row lg:grid lg:grid-cols-2 gap-3 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0"
+                : "flex flex-row lg:flex-col gap-3 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0"
+            }
+          >
             {sideStreams.map((stream) => (
               <SidecarTile
                 key={stream.id || stream.channelName}
@@ -175,15 +206,15 @@ export function StageView() {
         {isSingleStream && (
           <div
             onClick={() => openDrawer({ referenceIndex: 0 })}
-            className="group relative flex-1 w-full flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border/80 hover:border-brand-gold/70 bg-surface-card/60 hover:bg-surface-elevated/70 transition-all cursor-pointer p-6 text-center select-none min-h-[220px]"
+            className="group relative flex-1 w-full flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border/80 hover:border-brand-gold/70 bg-surface-card/60 hover:bg-surface-elevated/70 transition-all cursor-pointer p-5 text-center select-none min-h-[140px] sm:min-h-[200px]"
           >
-            <div className="w-12 h-12 rounded-full bg-surface-elevated border border-border group-hover:border-brand-gold flex items-center justify-center text-text-muted group-hover:text-brand-gold transition-all mb-3 shadow-sm">
-              <Plus className="w-6 h-6 stroke-[2.5]" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-surface-elevated border border-border group-hover:border-brand-gold flex items-center justify-center text-text-muted group-hover:text-brand-gold transition-all mb-2 shadow-sm">
+              <Plus className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5]" />
             </div>
-            <span className="text-sm font-bold text-text-primary group-hover:text-brand-gold transition-colors">
+            <span className="text-xs sm:text-sm font-bold text-text-primary group-hover:text-brand-gold transition-colors">
               + Add a stream
             </span>
-            <span className="text-xs text-text-muted mt-1 max-w-xs">
+            <span className="text-[11px] text-text-muted mt-0.5 max-w-xs">
               Slot 2 · Click to discover side-by-side stream
             </span>
           </div>
@@ -194,7 +225,7 @@ export function StageView() {
           <button
             type="button"
             onClick={() => openDrawer({ referenceIndex: 0 })}
-            className="group flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl text-xs font-bold bg-surface-card hover:bg-surface-elevated text-brand-gold border border-border/80 hover:border-brand-gold shadow-md transition-all hover:scale-[1.01] active:scale-[0.99]"
+            className="group flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl text-xs font-bold bg-surface-card hover:bg-surface-elevated text-brand-gold border border-border/80 hover:border-brand-gold shadow-md transition-all hover:scale-[1.01] active:scale-[0.99] shrink-0"
           >
             <div className="w-5 h-5 rounded-md bg-brand-gold/20 flex items-center justify-center group-hover:bg-brand-gold group-hover:text-black transition-colors">
               <Plus className="w-3.5 h-3.5 stroke-[3]" />
@@ -217,13 +248,14 @@ export function StageView() {
 /**
  * SidecarTile renders an individual stream in the sidecar grid/column.
  * Supports:
- * - 16:9 widescreen video embed (clean, no hover overlay)
+ * - Desktop (>= 1024px): 16:9 widescreen video embed with KickPlayer
+ * - Mobile (< 1024px): Touch-friendly preview with Tap-to-Swap (prevents browser freezing & data waste)
  * - Header Swap button to fill left main stage
  * - Direct stream removal
  */
 function SidecarTile({ stream, onFocus, onRemove }) {
   return (
-    <div className="group relative flex flex-col rounded-xl overflow-hidden bg-surface-card border border-border/80 hover:border-brand-gold/70 hover:shadow-glow-gold transition-all duration-200 select-none">
+    <div className="group relative flex flex-col rounded-xl overflow-hidden bg-surface-card border border-border/80 hover:border-brand-gold/70 hover:shadow-glow-gold transition-all duration-200 select-none shrink-0 w-[240px] sm:w-[280px] lg:w-full">
       {/* Tile Header */}
       <div className="flex items-center justify-between px-2.5 py-1.5 bg-surface-elevated border-b border-border/40 text-xs shrink-0">
         <div className="flex items-center gap-1.5 min-w-0">
@@ -264,9 +296,45 @@ function SidecarTile({ stream, onFocus, onRemove }) {
         </div>
       </div>
 
-      {/* Video Player in strict 16:9 ratio - CLEAN: No overlay */}
-      <div className="relative aspect-video w-full bg-black">
+      {/* DESKTOP (lg:): Full Kick Player Live Embed */}
+      <div className="hidden lg:block relative aspect-video w-full bg-black">
         <KickPlayer channel={stream.channelName} muted={true} />
+      </div>
+
+      {/* MOBILE (< lg:): Clean thumbnail with Tap to Swap (no heavy background iframe) */}
+      <div
+        onClick={() => onFocus(stream.id)}
+        className="block lg:hidden relative aspect-video w-full bg-black cursor-pointer group/thumb"
+      >
+        <img
+          src={stream.thumbnailUrl}
+          alt={stream.title}
+          className="w-full h-full object-cover group-hover/thumb:scale-105 transition-transform"
+          loading="lazy"
+          onError={(e) => {
+            e.currentTarget.src = "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=640&h=360&fit=crop&q=80";
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 flex flex-col justify-between p-2">
+          <div className="flex items-center justify-between">
+            <span className="px-1.5 py-0.5 rounded bg-live text-white font-extrabold text-[9px] uppercase shadow">
+              LIVE
+            </span>
+            {stream.viewerCount > 0 && (
+              <span className="px-1.5 py-0.5 rounded bg-black/75 text-white text-[9px] font-medium border border-white/10">
+                {stream.viewerCount >= 1000
+                  ? `${(stream.viewerCount / 1000).toFixed(1)}k`
+                  : stream.viewerCount}
+              </span>
+            )}
+          </div>
+          <div className="flex items-center justify-center">
+            <span className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-gold text-black font-bold text-[10px] shadow-md group-hover/thumb:scale-105 transition-transform">
+              <ArrowLeftRight className="w-3 h-3 stroke-[2.5]" />
+              <span>Tap to Watch</span>
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Bottom Small Title */}

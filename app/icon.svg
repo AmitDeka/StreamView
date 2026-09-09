@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#261413"/>
+      <stop offset="100%" stop-color="#140809"/>
+    </linearGradient>
+  </defs>
+  <!-- Background Card -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bgGrad)" stroke="#4A3214" stroke-width="2"/>
+  <!-- 2x2 Brand Grid Tiles -->
+  <!-- Top-Left: Gold -->
+  <rect x="14" y="14" width="16" height="16" rx="3.5" fill="#F4C542"/>
+  <!-- Top-Right: Orange -->
+  <rect x="34" y="14" width="16" height="16" rx="3.5" fill="#FF8A2A"/>
+  <!-- Bottom-Left: Red -->
+  <rect x="14" y="34" width="16" height="16" rx="3.5" fill="#E13D32"/>
+  <!-- Bottom-Right: Pink -->
+  <rect x="34" y="34" width="16" height="16" rx="3.5" fill="#F01867"/>
+</svg>

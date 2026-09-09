@@ -33,6 +33,27 @@ export function StreamCard({
         />
 
 
+        {/* Live Status Badge */}
+        {stream.isLive ? (
+          <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-live text-white font-extrabold text-[10px] tracking-wider uppercase shadow-md">
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+            <span>LIVE</span>
+          </div>
+        ) : (
+          <div className="absolute top-2 left-2 z-10 px-2 py-0.5 rounded-md bg-zinc-800/80 text-zinc-300 font-bold text-[10px] uppercase shadow-md">
+            OFFLINE
+          </div>
+        )}
+
+        {/* Live Viewer Count Badge */}
+        {stream.isLive && typeof stream.viewerCount === "number" && stream.viewerCount > 0 && (
+          <div className="absolute top-2 right-2 z-10 px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-sm text-white font-medium text-[10px] border border-white/10 shadow-md">
+            {stream.viewerCount >= 1000
+              ? `${(stream.viewerCount / 1000).toFixed(1)}k viewers`
+              : `${stream.viewerCount} viewers`}
+          </div>
+        )}
+
         {/* Selected Indicator Badge on thumbnail */}
         {isSelected && (
           <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-20">
