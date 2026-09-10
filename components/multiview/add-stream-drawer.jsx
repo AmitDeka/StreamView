@@ -32,14 +32,11 @@ export function AddStreamDrawer() {
   // Extract signals from active reference stream
   const signals = extractDiscoverySignals(firstStream);
 
-  // Synchronize initial filter: automatically extract hashtag or category from first streamer when drawer opens
+  // Synchronize initial filter: defaults to All Related unless an explicit filter was requested
   useEffect(() => {
     if (isDrawerOpen) {
       setSearchQuery("");
-      const first = selectedStreams[0] || activeReferenceStream;
-      const firstSignals = extractDiscoverySignals(first);
-      const firstHashtag = firstSignals.hashtags.length > 0 ? firstSignals.hashtags[0] : "";
-      const defaultFilter = activeDrawerFilter || firstHashtag || firstSignals.category || "";
+      const defaultFilter = activeDrawerFilter || "";
       setActiveFilter(defaultFilter);
     }
   }, [isDrawerOpen, activeDrawerFilter]);
@@ -72,7 +69,10 @@ export function AddStreamDrawer() {
             excludeList.join(",")
           )}`;
         } else {
-          url = `/api/kick/search?q=&exclude=${encodeURIComponent(excludeList.join(","))}`;
+          const refChannel = firstStream?.channelName || activeReferenceStream?.channelName || "";
+          url = `/api/kick/related?channel=${encodeURIComponent(
+            refChannel
+          )}&filter=&exclude=${encodeURIComponent(excludeList.join(","))}`;
         }
 
         const res = await fetch(url);
@@ -335,11 +335,20 @@ export function AddStreamDrawer() {
                   <span className="text-xs font-medium">Searching Kick for &quot;{searchQuery || activeFilter}&quot;...</span>
                 </div>
               ) : errorMsg ? (
-                <div className="py-10 px-4 rounded-xl bg-surface-card border border-border text-center space-y-2">
-                  <p className="text-sm text-text-secondary">{errorMsg}</p>
+                <div className="py-10 px-4 rounded-xl bg-surface-card border border-border text-center space-y-3">
+                  <p className="text-sm text-text-primary font-medium">{errorMsg}</p>
                   <p className="text-xs text-text-muted">
-                    Make sure the username is spelled correctly, or try searching by category or hashtag above.
+                    No other active Kick streamers are broadcasting with this exact tag right now.
                   </p>
+                  {activeFilter && (
+                    <button
+                      type="button"
+                      onClick={() => setActiveFilter("")}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-brand-gold text-black text-xs font-bold hover:bg-brand-gold/90 transition-all shadow-sm"
+                    >
+                      Show All Related Streams
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
