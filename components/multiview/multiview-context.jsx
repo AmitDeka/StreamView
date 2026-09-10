@@ -56,39 +56,57 @@ export function MultiViewProvider({ children }) {
     } catch (e) {}
   }, [activeLayout]);
 
-  // Continuously enrich selected streams with real Kick avatar/DP and live viewer count
+  // Continuously enrich selected streams with real Kick avatar/DP, live viewer count, and live title/category
   useEffect(() => {
     if (selectedStreams.length === 0) return;
 
-    selectedStreams.forEach(async (stream) => {
-      try {
-        const res = await fetch(`/api/kick/channel?name=${encodeURIComponent(stream.channelName)}`);
-        if (res.ok) {
-          const json = await res.json();
-          if (json.data) {
-            const { avatarUrl, viewerCount, title, category } = json.data;
-            setSelectedStreams((prev) =>
-              prev.map((s) => {
-                if (s.channelName.toLowerCase() === stream.channelName.toLowerCase()) {
-                  const newAvatar = avatarUrl || s.avatarUrl;
-                  const newCount = viewerCount !== undefined ? viewerCount : s.viewerCount;
-                  if (newAvatar !== s.avatarUrl || newCount !== s.viewerCount) {
-                    return {
-                      ...s,
-                      avatarUrl: newAvatar,
-                      viewerCount: newCount,
-                      title: title || s.title,
-                      category: category || s.category,
-                    };
+    const refreshStreams = () => {
+      selectedStreams.forEach(async (stream) => {
+        try {
+          const res = await fetch(`/api/kick/channel?name=${encodeURIComponent(stream.channelName)}`, {
+            cache: "no-store",
+          });
+          if (res.ok) {
+            const json = await res.json();
+            if (json.data) {
+              const { avatarUrl, viewerCount, title, category } = json.data;
+              setSelectedStreams((prev) =>
+                prev.map((s) => {
+                  if (s.channelName.toLowerCase() === stream.channelName.toLowerCase()) {
+                    const newAvatar = avatarUrl || s.avatarUrl;
+                    const newCount = viewerCount !== undefined && viewerCount !== null ? viewerCount : s.viewerCount;
+                    const newTitle = title || s.title;
+                    const newCategory = category || s.category;
+
+                    const hasChanged =
+                      (avatarUrl && avatarUrl !== s.avatarUrl) ||
+                      (viewerCount !== undefined && viewerCount !== null && viewerCount !== s.viewerCount) ||
+                      (title && title !== s.title) ||
+                      (category && category !== s.category);
+
+                    if (hasChanged) {
+                      return {
+                        ...s,
+                        avatarUrl: newAvatar,
+                        viewerCount: newCount,
+                        title: newTitle,
+                        category: newCategory,
+                      };
+                    }
                   }
-                }
-                return s;
-              })
-            );
+                  return s;
+                })
+              );
+            }
           }
-        }
-      } catch (e) {}
-    });
+        } catch (e) {}
+      });
+    };
+
+    refreshStreams();
+
+    const interval = setInterval(refreshStreams, 30000);
+    return () => clearInterval(interval);
   }, [selectedStreams.map((s) => s.channelName).join(",")]);
 
   const addStream = (stream) => {
