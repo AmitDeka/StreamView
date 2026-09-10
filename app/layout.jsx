@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { BookmarkFab } from "@/components/common/bookmark-fab";
 import { APP_NAME, APP_TAGLINE, APP_DESCRIPTION } from "@/lib/config";
 
 export const metadata = {
@@ -24,6 +25,7 @@ export default function RootLayout({ children }) {
         <Navbar />
         <main className="flex-1 flex flex-col">{children}</main>
         <Footer />
+        <BookmarkFab />
       </body>
     </html>
   );
