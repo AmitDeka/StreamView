@@ -4,6 +4,10 @@ import { NextResponse } from "next/server";
 import { searchStreams } from "@/lib/kick/search";
 
 export async function GET(request) {
+  const headers = {
+    "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+  };
+
   try {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get("q") || "";
@@ -15,16 +19,19 @@ export async function GET(request) {
       limit,
     });
 
-    return NextResponse.json({
-      success: true,
-      data: streams,
-      count: streams.length,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        data: streams,
+        count: streams.length,
+      },
+      { headers }
+    );
   } catch (err) {
     console.error("API /api/kick/search error:", err);
     return NextResponse.json(
       { success: false, error: "Failed to search streams" },
-      { status: 500 }
+      { status: 500, headers }
     );
   }
 }
