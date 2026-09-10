@@ -281,19 +281,30 @@ export function AddStreamDrawer() {
               <Flame className="w-3 h-3 text-brand-orange" />
               Trending:
             </span>
-            {TRENDING_TAGS.slice(0, 6).map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                onClick={() => {
-                  setSearchQuery(tag);
-                  setActiveFilter("");
-                }}
-                className="text-[11px] px-2.5 py-0.5 rounded-full bg-surface-card hover:bg-surface-hover text-text-secondary hover:text-white border border-border/70 hover:border-brand-gold/50 transition-colors cursor-pointer"
-              >
-                {tag}
-              </button>
-            ))}
+            {TRENDING_TAGS.map((tag) => {
+              const isActive = searchQuery.toLowerCase() === tag.toLowerCase();
+              return (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => {
+                    if (isActive) {
+                      setSearchQuery("");
+                    } else {
+                      setSearchQuery(tag);
+                      setActiveFilter("");
+                    }
+                  }}
+                  className={`text-[11px] px-2.5 py-0.5 rounded-full transition-colors cursor-pointer ${
+                    isActive
+                      ? "bg-brand-orange text-white font-semibold shadow-sm"
+                      : "bg-surface-card hover:bg-surface-hover text-text-secondary hover:text-white border border-border/70 hover:border-brand-gold/50"
+                  }`}
+                >
+                  {tag}
+                </button>
+              );
+            })}
           </div>
 
           {/* Results List */}
