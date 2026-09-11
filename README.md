@@ -51,7 +51,14 @@ StreamView is a modern, open-source web application engineered for roleplay comm
 - Strictly integrates Kick's official sandboxed iframe player (`https://player.kick.com/{channel}?autoplay=true`).
 - Zero video proxying, zero restreaming, zero tampering, and zero playback latency.
 
-### 7. Privacy-First Architecture 🔒
+### 7. Search Engine Optimization (SEO) & Analytics 📈
+- **Google Analytics 4 (GA4)**: Built-in integration via `next/script` with `strategy="afterInteractive"` for zero page-load penalty.
+- **Dynamic Sitemap & Robots**: Native Next.js 14 `sitemap.js` and `robots.js` generating `/sitemap.xml` and `/robots.txt` for continuous search engine indexation.
+- **Schema.org Structured Data**: Integrated JSON-LD schemas (`WebSite` with Sitelinks SearchBox, `WebApplication`, `Organization`).
+- **Dynamic OpenGraph Social Cards**: Automatic 1200x630 social preview card generation via `app/opengraph-image.jsx` using `next/og` Edge runtime.
+- **Targeted Gaming Keywords**: Pre-configured metadata for Kick multistreaming, Yatra RP, GTA V RP, and Hindi streaming communities.
+
+### 8. Privacy-First Architecture 🔒
 - **Zero Personal Data Collection**: No sign-ups, accounts, logins, or trackers.
 - **Local Persistence**: Layout preferences, active streams, and audio settings are safely stored on device via `localStorage`.
 
@@ -63,6 +70,8 @@ StreamView is a modern, open-source web application engineered for roleplay comm
 - **UI Library**: [React 18](https://react.dev/)
 - **Styling**: [Tailwind CSS 3.4](https://tailwindcss.com/) with custom dark gaming theme
 - **Icons**: [Lucide React](https://lucide.dev/)
+- **Analytics**: Google Analytics 4 (GA4)
+- **SEO**: Schema.org JSON-LD, Dynamic `sitemap.xml`, `robots.txt`, `next/og`
 - **Data Fetching**: Native Fetch API with direct Kick live channel & stream API integration
 - **Class Utilities**: `clsx`, `tailwind-merge`
 
@@ -86,12 +95,17 @@ StreamView/
 │   ├── terms/
 │   │   └── page.jsx                    # Terms of Service page
 │   ├── globals.css                     # Custom scrollbars, glow utilities & palette
-│   ├── layout.jsx                      # Root layout with Navbar, Footer & Bookmark FAB
-│   └── page.jsx                        # Landing page with Yatra RP dedication & guide
+│   ├── layout.jsx                      # Root layout with Navbar, Footer, GA4 & SEO
+│   ├── opengraph-image.jsx             # Dynamic 1200x630 social card generator
+│   ├── page.jsx                        # Landing page with Yatra RP dedication & guide
+│   ├── robots.js                       # Dynamic robots.txt route handler
+│   └── sitemap.js                      # Dynamic sitemap.xml route handler
 ├── components/
 │   ├── common/
 │   │   ├── bookmark-fab.jsx            # Sticky bottom-right floating bookmark button
-│   │   └── bookmark-modal.jsx          # Interactive bookmark guide & URL copier
+│   │   ├── bookmark-modal.jsx          # Interactive bookmark guide & URL copier
+│   │   ├── google-analytics.jsx        # Google Analytics 4 (GA4) script embed
+│   │   └── structured-data.jsx         # Schema.org JSON-LD structured data
 │   ├── home/                           # Landing hero, preview arena, features, CTA
 │   ├── kick/                           # Sandboxed Kick iframe video player
 │   ├── layout/                         # Responsive Navbar & Footer
@@ -136,6 +150,12 @@ npm install
 Create a `.env.local` file in the root directory:
 
 ```env
+# Google Analytics 4 Measurement ID (e.g. G-XXXXXXXXXX)
+NEXT_PUBLIC_GA_ID=your_ga4_measurement_id_here
+
+# Base canonical URL for SEO and social sharing cards
+NEXT_PUBLIC_APP_URL=https://stream-view-beige.vercel.app
+
 # Optional: Official Kick API credentials (for global livestreams indexing)
 KICK_CLIENT_ID=your_client_id_here
 KICK_CLIENT_SECRET=your_client_secret_here

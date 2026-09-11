@@ -99,7 +99,7 @@ export default function PrivacyPage() {
             <h2>4. Cookies & Analytics</h2>
           </div>
           <p>
-            {APP_NAME} does not use tracking cookies, advertising beacons, or invasive tracking scripts. We prioritize privacy-first, lightweight operation.
+            {APP_NAME} does not use invasive tracking beacons or advertising networks. We may utilize standard aggregated analytics (such as Google Analytics 4) strictly to measure website performance, multi-view usage trends, and page responsiveness. All analytics data is processed anonymously without linking to individual personal identities.
           </p>
         </section>
 
