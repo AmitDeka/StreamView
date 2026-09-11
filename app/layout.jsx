@@ -88,13 +88,33 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID || GA_TRACKING_ID;
+
   return (
     <html lang="en" className="dark">
       <head>
         <StructuredData />
+        {gaId && (
+          <>
+            <script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+            />
+            <script
+              id="google-tag-init"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${gaId}');
+                `,
+              }}
+            />
+          </>
+        )}
       </head>
       <body className="bg-subtle-grid min-h-screen flex flex-col antialiased selection:bg-brand-orange selection:text-white">
-        <GoogleAnalytics />
         <Navbar />
         <main className="flex-1 flex flex-col">{children}</main>
         <Footer />
