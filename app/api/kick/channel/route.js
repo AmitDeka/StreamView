@@ -51,10 +51,7 @@ export async function GET(request) {
       if (res.ok) {
         const data = await res.json();
         const avatarUrl = data.user?.profile_pic || data.user?.profilepic || null;
-        const hasLiveThumbnail = Boolean(data.livestream?.thumbnail?.url);
-        const startTime = new Date(data.livestream?.start_time || data.livestream?.created_at || "").getTime();
-        const isRecentStart = !isNaN(startTime) && (Date.now() - startTime < 10 * 60 * 1000);
-        const isLive = Boolean(data.livestream?.is_live && (hasLiveThumbnail || isRecentStart));
+        const isLive = Boolean(data.livestream && data.livestream.is_live);
 
         const viewerCount =
           isLive && typeof data.livestream?.viewer_count === "number"
