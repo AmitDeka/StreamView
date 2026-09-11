@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { getRelatedStreams } from "@/lib/kick/search";
 import { getStreamByChannel } from "@/lib/kick/streams";
 import { extractDiscoverySignals } from "@/lib/discovery/signals";
+import { rememberYatraChannel } from "@/lib/kick/yatra";
 
 export async function GET(request) {
   try {
@@ -12,6 +13,14 @@ export async function GET(request) {
     const activeFilter = searchParams.get("filter") || "";
     const activeQuery = searchParams.get("q") || "";
     const exclude = searchParams.get("exclude") ? searchParams.get("exclude").split(",") : [];
+    const known = searchParams.get("known");
+
+    if (known) {
+      const knownList = known.split(",").map((c) => c.trim().toLowerCase()).filter(Boolean);
+      for (const ch of knownList) {
+        rememberYatraChannel(ch);
+      }
+    }
 
     let referenceStream = null;
     if (channel) {

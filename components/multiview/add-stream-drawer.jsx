@@ -6,6 +6,7 @@ import { StreamCard } from "./stream-card";
 import { extractDiscoverySignals } from "@/lib/discovery/signals";
 import { TRENDING_TAGS } from "@/lib/config";
 import { SearchTipBanner } from "@/components/common/search-tip-banner";
+import { getKnownYatraParam, saveYatraChannel } from "@/lib/discovery/client-storage";
 import { X, Search, Sparkles, Hash, Gamepad2, Loader2, Check, Radio, Flame, User } from "lucide-react";
 
 export function AddStreamDrawer() {
@@ -56,24 +57,26 @@ export function AddStreamDrawer() {
     const timeout = setTimeout(async () => {
       try {
         const excludeList = selectedStreams.map((s) => s.channelName);
+        const known = getKnownYatraParam();
+        const knownQuery = known ? `&known=${encodeURIComponent(known)}` : "";
         
         let url = "";
         if (hasSearch) {
           url = `/api/kick/search?q=${encodeURIComponent(searchQuery.trim())}&exclude=${encodeURIComponent(
             excludeList.join(",")
-          )}`;
+          )}${knownQuery}`;
         } else if (hasFilter) {
           const refChannel = firstStream?.channelName || activeReferenceStream?.channelName || "";
           url = `/api/kick/related?channel=${encodeURIComponent(
             refChannel
           )}&filter=${encodeURIComponent(activeFilter)}&exclude=${encodeURIComponent(
             excludeList.join(",")
-          )}`;
+          )}${knownQuery}`;
         } else {
           const refChannel = firstStream?.channelName || activeReferenceStream?.channelName || "";
           url = `/api/kick/related?channel=${encodeURIComponent(
             refChannel
-          )}&filter=&exclude=${encodeURIComponent(excludeList.join(","))}`;
+          )}&filter=&exclude=${encodeURIComponent(excludeList.join(","))}${knownQuery}`;
         }
 
         const res = await fetch(url);
@@ -83,6 +86,16 @@ export function AddStreamDrawer() {
         if (isMounted) {
           const list = json.data || [];
           setStreams(list);
+
+          // Automatically persist any returned Yatra creators in localStorage
+          for (const s of list) {
+            const t = (s.title || "").toLowerCase();
+            const tags = (s.tags || []).map((x) => String(x).toLowerCase());
+            if (t.includes("yatra") || tags.some((x) => x.includes("yatra"))) {
+              saveYatraChannel(s.channelName);
+            }
+          }
+
           if (list.length === 0) {
             setErrorMsg(`No live streams found matching "${searchQuery.trim() || activeFilter}".`);
           }

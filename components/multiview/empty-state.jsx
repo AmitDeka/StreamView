@@ -6,6 +6,7 @@ import { StreamCard } from "./stream-card";
 import { TRENDING_TAGS } from "@/lib/config";
 import { Search, Sparkles, Flame, Loader2, User, Hash, Gamepad2, Heart } from "lucide-react";
 import { SearchTipBanner } from "@/components/common/search-tip-banner";
+import { getKnownYatraParam, saveYatraChannel } from "@/lib/discovery/client-storage";
 
 export function EmptyState() {
   const { addStream } = useMultiView();
@@ -21,7 +22,9 @@ export function EmptyState() {
     let isMounted = true;
     setIsLoading(true);
 
-    const url = term ? `/api/kick/search?q=${encodeURIComponent(term)}` : `/api/kick/search?q=`;
+    const known = getKnownYatraParam();
+    const baseUrl = term ? `/api/kick/search?q=${encodeURIComponent(term)}` : `/api/kick/search?q=`;
+    const url = known ? `${baseUrl}${baseUrl.includes("?") ? "&" : "?"}known=${encodeURIComponent(known)}` : baseUrl;
 
     const timer = setTimeout(async () => {
       try {
@@ -29,7 +32,17 @@ export function EmptyState() {
         if (res.ok) {
           const json = await res.json();
           if (isMounted) {
-            setStreams(json.data || []);
+            const list = json.data || [];
+            setStreams(list);
+
+            // Automatically remember any returned Yatra creators in localStorage
+            for (const s of list) {
+              const t = (s.title || "").toLowerCase();
+              const tags = (s.tags || []).map((x) => String(x).toLowerCase());
+              if (t.includes("yatra") || tags.some((x) => x.includes("yatra"))) {
+                saveYatraChannel(s.channelName);
+              }
+            }
           }
         }
       } catch (e) {

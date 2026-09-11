@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
 import { searchStreams } from "@/lib/kick/search";
+import { rememberYatraChannel } from "@/lib/kick/yatra";
 
 export async function GET(request) {
   const headers = {
@@ -13,6 +14,14 @@ export async function GET(request) {
     const query = searchParams.get("q") || "";
     const exclude = searchParams.get("exclude") ? searchParams.get("exclude").split(",") : [];
     const limit = parseInt(searchParams.get("limit") || "20", 10);
+    const known = searchParams.get("known");
+
+    if (known) {
+      const knownList = known.split(",").map((c) => c.trim().toLowerCase()).filter(Boolean);
+      for (const ch of knownList) {
+        rememberYatraChannel(ch);
+      }
+    }
 
     const streams = await searchStreams(query, {
       excludeChannelNames: exclude,
