@@ -1,49 +1,59 @@
 # StreamView 🎥
 
-> **Watch Multiple Kick Streams Together in an Adaptive Multi View Interface**
+> **Watch Multiple Kick Streams Together in an Adaptive Multi View Interface**  
+> *Dedicated with ❤️ to the Yatra RP Community*
 
-StreamView is a modern, open-source web application designed for gaming enthusiasts and esports followers to discover connected live broadcasts on **Kick** and watch them simultaneously in an adaptive multi-view workspace using Kick's official embed players.
+StreamView is a modern, open-source web application engineered for roleplay communities, esports followers, and gaming fans to discover connected live broadcasts on **Kick** and watch them simultaneously in an adaptive multi-view workspace using Kick's official embed players.
 
-[![Next.js 14](https://img.shields.io/badge/Next.js-14.2.35-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-gold?style=flat-square)](https://github.com/AmitDeka/StreamView/releases)
+[![Next.js 14](https://img.shields.io/badge/Next.js-14.2.15-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React 18](https://img.shields.io/badge/React-18.3.1-blue?style=flat-square&logo=react)](https://react.js.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
-[![GitHub](https://img.shields.io/badge/GitHub-StreamView-181717?style=flat-square&logo=github)](https://github.com/AmitDeka/StreamView)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-stream--view.vercel.app-brightgreen?style=flat-square)](https://stream-view-beige.vercel.app)
 
 ---
 
 ## 🌟 Key Features
 
-### 1. Dual Layout Modes (1 to 6 Streams)
+### 1. Dedicated to the Yatra RP Community ❤️
+- **Self-Learning Roleplay Engine**: Automatically identifies live Yatra Roleplay creators and Hindi streams down to single-digit view counts.
+- **Dynamic Community Discovery**: Seamlessly discovers active streamers across `#yatraroleplay`, `#yatrarp`, `yatra`, and Indian GTA RP servers (e.g. Hathoda, Qayzer4, OnHypeGamer, Kryzor9, Shreeplayz, CandidGaming, Thunderboltgaming, iMRocky, GamerGill, Stelvin777, and emerging community creators).
+- **Multi-POV Roleplay Viewing**: Watch criminal chases, police operations, courtrooms, and server storylines unfolding from multiple creator perspectives at the same time.
+
+### 2. Dual Adaptive Layout Modes (1 to 6 Streams)
 - **Stage View**:
-  - **1 to 3 Streams**: 3:1 Flex layout featuring a dominant **Left Main Stage** (75% width) and a clean single-column sidecar (25% width) for secondary streams.
-  - **4 to 6 Streams**: Features a 2-column scrollable sidecar with a distinct gold-accented border and high-visibility glow scrollbar.
-  - **Instant Swap**: Click the subtle **`[ ⇄ Swap ]`** button on any secondary card to immediately focus that stream on the main stage without interruption.
-  - **Dynamic Height Synchronization**: Left Stage and Right Sidecar maintain synchronized box heights via `ResizeObserver`.
+  - **1 to 3 Streams**: 3:1 Flex layout featuring a dominant **Left Main Stage** (75% width) and a clean single-column standby sidecar (25% width).
+  - **4 to 6 Streams**: 2-column scrollable sidecar with gold-accented styling and smooth height synchronization via `ResizeObserver`.
+  - **Instant Swap**: Click **`[ ⇄ Swap ]`** on any standby tile or tap on mobile to instantly spotlight that stream on the main player.
 - **Equal Grid**:
   - **2 Streams**: 50% / 50% split-screen (`grid-cols-2`).
-  - **3 Streams**: 33.3% / 33.3% / 33.3% in a single row (`grid-cols-3`).
+  - **3 Streams**: Single-row 33% split on desktop (`lg:grid-cols-3`) / 2-column on tablets (`sm:grid-cols-2`).
   - **4 Streams**: 2x2 grid with 4 equal 50% tiles (`grid-cols-2`).
-  - **5 & 6 Streams**: 3-column arrangement (`grid-cols-3`).
+  - **5 & 6 Streams**: 3-column arrangement on desktop / 2-column on tablets.
+  - **Solo Mode**: Single-click maximization of any individual stream with audio focus.
 
-### 2. Contextual Stream Discovery
-- **Hashtag & Keyword Extraction**: Automatically extracts hashtags (e.g. `#yatraroleplay`, `#gta5rp`), game categories, and title keywords from your active reference stream.
-- **Interactive Signal Chips**: Click contextual chips in the discovery drawer or bottom bar to instantly query and rank connected live creators playing on the same server.
-- **Auto-Sync Channel Avatars & DPs**: Fetches official Kick channel profile pictures directly via `/api/kick/channel`.
+### 3. Fully Optimized for Mobile & Tablet 📱
+- **Adaptive Breakpoints**: Custom UX for mobile phones (`<640px`), small tablets & foldables (`640px–768px`), and full-size tablets (`768px–1024px`).
+- **Touch-Momentum Standby Rail**: Secondary streams on mobile/tablet arrange in a smooth horizontal touch-swipe strip (`touch-pan-x`) with 1-tap **Swap to Main Stage** (saving mobile battery & bandwidth).
+- **Responsive Workspace Toolbar**: Universal Stage View / Equal Grid toggle and controls bar with 44px+ touch targets and safe bottom clearance.
+- **Expandable Add Stream Drawer**: Full-width on mobile with horizontally scrollable discovery tags.
 
-### 3. Native Fullscreen Video Stage
-- **Dedicated Video Stage Fullscreen**: Single-click fullscreen mode for the entire video arena without individual tile clutter.
-- **In-Fullscreen Stream Addition**: The slide-out discovery drawer is mounted inside the fullscreen arena, allowing users to search, filter, and add/remove streams without exiting fullscreen.
-- **Maximized Viewport**: Reduced top/bottom padding and vertically centered layout for complete display utilization.
+### 4. Sticky 1-Click Bookmark FAB 🔖
+- **Persistent Bottom-Right Button**: Floating bookmark button with subtle pulsing indicator.
+- **Instant Browser Saving**: Detects client operating system (Windows, Mac, Mobile) and displays exact shortcut keys (`Ctrl+D` / `Cmd+D`) and 1-click URL copying.
 
-### 4. Official Kick Embed Player
-- Strictly integrates Kick's official sandboxed iframe player: `https://player.kick.com/{channel}?autoplay=true&muted=false`.
+### 5. Native Fullscreen Video Stage 🖥️
+- **Cockpit Fullscreen**: 1-click fullscreen mode for the entire video arena without browser borders or distraction.
+- **In-Fullscreen Stream Management**: Add, remove, or switch streams directly inside fullscreen without needing to exit.
+
+### 6. Official Kick Embed Players ⚡
+- Strictly integrates Kick's official sandboxed iframe player (`https://player.kick.com/{channel}?autoplay=true`).
 - Zero video proxying, zero restreaming, zero tampering, and zero playback latency.
 
-### 5. Privacy-First Architecture
-- **Zero Personal Data Collection**: No accounts, logins, passwords, or emails required.
-- **Local Persistence**: Layout modes and selected streams are stored locally in the browser via `localStorage`.
-- **Dedicated Legal Pages**: Complete [Privacy Policy](/privacy) and [Terms of Service](/terms) pages included.
+### 7. Privacy-First Architecture 🔒
+- **Zero Personal Data Collection**: No sign-ups, accounts, logins, or trackers.
+- **Local Persistence**: Layout preferences, active streams, and audio settings are safely stored on device via `localStorage`.
 
 ---
 
@@ -51,10 +61,10 @@ StreamView is a modern, open-source web application designed for gaming enthusia
 
 - **Framework**: [Next.js 14](https://nextjs.org/) (App Router, Server & Client Components)
 - **UI Library**: [React 18](https://react.dev/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with custom dark gaming theme
+- **Styling**: [Tailwind CSS 3.4](https://tailwindcss.com/) with custom dark gaming theme
 - **Icons**: [Lucide React](https://lucide.dev/)
+- **Data Fetching**: Native Fetch API with direct Kick live channel & stream API integration
 - **Class Utilities**: `clsx`, `tailwind-merge`
-- **Data Fetching**: Native Fetch API with direct Kick live channel & stream integration
 
 ---
 
@@ -65,32 +75,38 @@ StreamView/
 ├── app/
 │   ├── api/
 │   │   └── kick/
-│   │       ├── channel/route.js    # Official Kick streamer avatar proxy
-│   │       ├── related/route.js    # Contextual recommendation engine
-│   │       ├── search/route.js     # Live stream & channel search
-│   │       └── streams/route.js    # Live streams directory
+│   │       ├── channel/route.js        # Official Kick channel profile proxy
+│   │       ├── related/route.js        # Contextual recommendation engine
+│   │       ├── search/route.js         # Unified stream & channel search
+│   │       └── streams/route.js        # Live streams directory
 │   ├── multi-view/
-│   │   └── page.jsx                # Multi View workspace page
+│   │   └── page.jsx                    # Multi View workspace page
 │   ├── privacy/
-│   │   └── page.jsx                # Privacy Policy page
+│   │   └── page.jsx                    # Privacy Policy page
 │   ├── terms/
-│   │   └── page.jsx                # Terms of Service page
-│   ├── globals.css                 # Custom scrollbars, glow utilities & palette
-│   ├── layout.jsx                  # Root layout with Navbar and Footer
-│   └── page.jsx                    # Landing page with Step-by-Step guide
+│   │   └── page.jsx                    # Terms of Service page
+│   ├── globals.css                     # Custom scrollbars, glow utilities & palette
+│   ├── layout.jsx                      # Root layout with Navbar, Footer & Bookmark FAB
+│   └── page.jsx                        # Landing page with Yatra RP dedication & guide
 ├── components/
-│   ├── home/                       # Landing page hero, preview, features, CTA
-│   ├── kick/                       # Sandboxed Kick iframe video player
-│   ├── layout/                     # Responsive Navbar & Footer
-│   └── multiview/                  # Stage View, Grid, Drawer, Workspace
+│   ├── common/
+│   │   ├── bookmark-fab.jsx            # Sticky bottom-right floating bookmark button
+│   │   └── bookmark-modal.jsx          # Interactive bookmark guide & URL copier
+│   ├── home/                           # Landing hero, preview arena, features, CTA
+│   ├── kick/                           # Sandboxed Kick iframe video player
+│   ├── layout/                         # Responsive Navbar & Footer
+│   └── multiview/                      # Stage View, Equal Grid, Drawer, Workspace
 ├── lib/
-│   ├── discovery/                  # Hashtag regex & contextual rankers
-│   ├── kick/                       # Kick API client, streams, and search
-│   ├── config.js                   # Application constants & layout options
-│   ├── use-fullscreen.js           # HTML5 Fullscreen API hook
-│   └── utils.js                    # Tailwind class utilities
-├── package.json                    # Project dependencies & scripts
-└── tailwind.config.js              # Custom theme colors and glow animations
+│   ├── discovery/                      # Hashtag regex & contextual rankers
+│   ├── kick/
+│   │   ├── search.js                   # Live stream search with Yatra engine
+│   │   ├── yatra.js                    # Self-learning Yatra Roleplay engine
+│   │   └── streams.js                  # Kick API live stream fetchers
+│   ├── config.js                       # Application constants & layout options
+│   ├── use-fullscreen.js               # HTML5 Fullscreen API hook
+│   └── utils.js                        # Tailwind class utilities
+├── package.json                        # Version 1.1.0 dependencies & scripts
+└── tailwind.config.js                  # Custom theme colors, animations & shadows
 ```
 
 ---
@@ -153,22 +169,8 @@ npm run start
 
 1. Push your repository to GitHub: `https://github.com/AmitDeka/StreamView`
 2. Import the repository into [Vercel](https://vercel.com).
-3. Next.js App Router defaults will automatically detect the build settings (`npm run build`).
+3. Next.js App Router defaults will automatically detect build settings (`npm run build`).
 4. Deploy!
-
-### Deploy with Docker
-
-```dockerfile
-FROM node:18-alpine AS runner
-WORKDIR /app
-ENV NODE_ENV=production
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-RUN npm run build
-EXPOSE 3000
-CMD ["npm", "run", "start"]
-```
 
 ---
 
@@ -185,4 +187,4 @@ CMD ["npm", "run", "start"]
 
 This project is open-source and licensed under the [MIT License](LICENSE).
 
-Made with ❤️ by [Amit Deka](https://github.com/AmitDeka).
+Made with ❤️ for the gaming and roleplay community by [Amit Deka](https://github.com/AmitDeka).
