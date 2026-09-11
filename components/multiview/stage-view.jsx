@@ -85,13 +85,13 @@ export function StageView() {
       className="w-full flex flex-col lg:flex-row gap-4 lg:items-start justify-center my-auto"
     >
       {/* Mobile Mode Notice Pill (< lg screens) */}
-      <div className="flex lg:hidden items-center justify-between px-3.5 py-2 rounded-xl bg-surface-card border border-border/70 text-[11px] text-text-muted mb-1 w-full">
-        <span className="flex items-center gap-1.5 font-medium text-text-secondary">
+      <div className="flex lg:hidden items-center justify-between px-3 py-1.5 rounded-xl bg-surface-card border border-border/70 text-[10px] sm:text-[11px] text-text-muted mb-0.5 w-full">
+        <span className="flex items-center gap-1.5 font-medium text-text-secondary truncate">
           <span>📱</span>
-          <span>Mobile Multi View: Tap any streamer card to swap onto main player</span>
+          <span>Tap any card to swap onto main player</span>
         </span>
-        <span className="text-brand-gold font-semibold text-[10px] shrink-0">
-          6 streams on desktop
+        <span className="text-brand-gold font-semibold text-[10px] shrink-0 ml-2">
+          {totalCount}/6 active
         </span>
       </div>
 
@@ -102,9 +102,9 @@ export function StageView() {
           className="relative w-full rounded-2xl overflow-hidden bg-surface-card border-2 border-brand-gold/50 shadow-2xl"
         >
           {/* Main Stage Top Indicator */}
-          <div className="flex items-center justify-between px-4 py-2.5 bg-surface-elevated/95 border-b border-border/70 z-20">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <span className="flex items-center gap-1 text-[11px] font-extrabold uppercase px-2 py-0.5 rounded bg-brand-gold text-black">
+          <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-2.5 bg-surface-elevated/95 border-b border-border/70 z-20">
+            <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+              <span className="flex items-center gap-1 text-[10px] sm:text-[11px] font-extrabold uppercase px-1.5 sm:px-2 py-0.5 rounded bg-brand-gold text-black shrink-0">
                 Main Stage
               </span>
               <img
@@ -114,31 +114,31 @@ export function StageView() {
                   e.currentTarget.onerror = null;
                   e.currentTarget.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${mainStream.channelName}&backgroundColor=b6e3f4,c0aede`;
                 }}
-                className="w-7 h-7 rounded-full border border-border/80 object-cover shrink-0 shadow-sm"
+                className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border border-border/80 object-cover shrink-0 shadow-sm"
               />
-              <span className="font-bold text-sm text-text-primary truncate">
+              <span className="font-bold text-xs sm:text-sm text-text-primary truncate">
                 {mainStream.channelName}
               </span>
             </div>
 
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
               <a
                 href={`${KICK_CHANNEL_BASE_URL}/${mainStream.channelName}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Open on Kick"
-                className="p-1.5 rounded text-text-secondary hover:text-white hover:bg-surface-hover transition-colors"
+                className="p-1 sm:p-1.5 rounded text-text-secondary hover:text-white hover:bg-surface-hover transition-colors"
               >
-                <ExternalLink className="w-4 h-4" />
+                <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </a>
 
               <button
                 type="button"
                 onClick={() => removeStream(mainStream.id)}
                 title="Remove Stream"
-                className="p-1.5 rounded text-text-secondary hover:text-brand-red hover:bg-surface-hover transition-colors"
+                className="p-1 sm:p-1.5 rounded text-text-secondary hover:text-brand-red hover:bg-surface-hover transition-colors"
               >
-                <X className="w-4 h-4" />
+                <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
             </div>
           </div>
@@ -149,16 +149,16 @@ export function StageView() {
           </div>
 
           {/* Main Stage Meta Footer */}
-          <div className="px-4 py-2.5 bg-surface-card border-t border-border/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+          <div className="px-3 sm:px-4 py-2 sm:py-2.5 bg-surface-card border-t border-border/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5 sm:gap-2 text-xs">
             <div className="flex-1 min-w-0">
-              <h2 className="text-sm font-bold text-text-primary truncate" title={mainStream.title}>
+              <h2 className="text-xs sm:text-sm font-bold text-text-primary truncate" title={mainStream.title}>
                 {mainStream.title}
               </h2>
-              <p className="text-xs text-brand-gold font-medium mt-0.5">
+              <p className="text-[11px] sm:text-xs text-brand-gold font-medium mt-0.5">
                 {mainStream.category}
               </p>
             </div>
-            <span className="text-[11px] text-text-muted hidden sm:inline-flex items-center gap-1.5 flex-wrap">
+            <span className="text-[10px] sm:text-[11px] text-text-muted hidden sm:inline-flex items-center gap-1.5 flex-wrap">
               <span>Click <strong className="text-brand-gold font-bold">Swap</strong> on any card to fill this stage</span>
               <span className="text-border/80">·</span>
               <span>Go full screen with the button below</span>
@@ -169,16 +169,16 @@ export function StageView() {
 
       {/* RIGHT: Secondary Streams (Adaptive: Horizontal Switcher Strip on Mobile, Live Embeds on Desktop) */}
       <div
-        className={`${rightWidthClass} flex flex-col gap-2.5 ${rightHeightClass} overflow-y-auto p-3 rounded-2xl bg-[#180A12]/90 border border-border/70 border-l-4 border-l-brand-gold/80 visible-scroll-container shadow-xl transition-all duration-300`}
+        className={`${rightWidthClass} flex flex-col gap-2 sm:gap-2.5 ${rightHeightClass} overflow-y-auto p-2.5 sm:p-3 rounded-2xl bg-[#180A12]/90 border border-border/70 border-l-4 border-l-brand-gold/80 visible-scroll-container shadow-xl transition-all duration-300`}
       >
         {/* Mobile Header / Quick Switcher Label */}
         {sideStreams.length > 0 && (
           <div className="flex lg:hidden items-center justify-between px-1 text-xs">
-            <span className="font-bold text-text-primary flex items-center gap-1.5">
+            <span className="font-bold text-text-primary flex items-center gap-1.5 text-[11px] sm:text-xs">
               <span>Stream Switcher</span>
               <span className="text-[10px] text-brand-gold font-mono">({sideStreams.length} standby)</span>
             </span>
-            <span className="text-[10px] text-text-muted">Tap card to watch on main</span>
+            <span className="text-[10px] text-text-muted">Swipe & tap to watch on main</span>
           </div>
         )}
 
@@ -187,8 +187,8 @@ export function StageView() {
           <div
             className={
               isFourToSix
-                ? "flex flex-row lg:grid lg:grid-cols-2 gap-3 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0"
-                : "flex flex-row lg:flex-col gap-3 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0"
+                ? "flex flex-row lg:grid lg:grid-cols-2 gap-2.5 sm:gap-3 overflow-x-auto lg:overflow-x-visible pb-1.5 lg:pb-0 touch-pan-x scrollbar-thin"
+                : "flex flex-row lg:flex-col gap-2.5 sm:gap-3 overflow-x-auto lg:overflow-x-visible pb-1.5 lg:pb-0 touch-pan-x scrollbar-thin"
             }
           >
             {sideStreams.map((stream) => (
@@ -206,15 +206,15 @@ export function StageView() {
         {isSingleStream && (
           <div
             onClick={() => openDrawer({ referenceIndex: 0 })}
-            className="group relative flex-1 w-full flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border/80 hover:border-brand-gold/70 bg-surface-card/60 hover:bg-surface-elevated/70 transition-all cursor-pointer p-5 text-center select-none min-h-[140px] sm:min-h-[200px]"
+            className="group relative flex-1 w-full flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border/80 hover:border-brand-gold/70 bg-surface-card/60 hover:bg-surface-elevated/70 transition-all cursor-pointer p-4 sm:p-5 text-center select-none min-h-[120px] sm:min-h-[180px]"
           >
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-surface-elevated border border-border group-hover:border-brand-gold flex items-center justify-center text-text-muted group-hover:text-brand-gold transition-all mb-2 shadow-sm">
-              <Plus className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5]" />
+            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-surface-elevated border border-border group-hover:border-brand-gold flex items-center justify-center text-text-muted group-hover:text-brand-gold transition-all mb-1.5 sm:mb-2 shadow-sm">
+              <Plus className="w-4 h-4 sm:w-6 sm:h-6 stroke-[2.5]" />
             </div>
             <span className="text-xs sm:text-sm font-bold text-text-primary group-hover:text-brand-gold transition-colors">
               + Add a stream
             </span>
-            <span className="text-[11px] text-text-muted mt-0.5 max-w-xs">
+            <span className="text-[10px] sm:text-[11px] text-text-muted mt-0.5 max-w-xs">
               Slot 2 · Click to discover side-by-side stream
             </span>
           </div>
@@ -225,10 +225,10 @@ export function StageView() {
           <button
             type="button"
             onClick={() => openDrawer({ referenceIndex: 0 })}
-            className="group flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl text-xs font-bold bg-surface-card hover:bg-surface-elevated text-brand-gold border border-border/80 hover:border-brand-gold shadow-md transition-all hover:scale-[1.01] active:scale-[0.99] shrink-0"
+            className="group flex items-center justify-center gap-2 w-full py-2 sm:py-2.5 px-3 sm:px-4 rounded-xl text-xs font-bold bg-surface-card hover:bg-surface-elevated text-brand-gold border border-border/80 hover:border-brand-gold shadow-md transition-all hover:scale-[1.01] active:scale-[0.99] shrink-0"
           >
-            <div className="w-5 h-5 rounded-md bg-brand-gold/20 flex items-center justify-center group-hover:bg-brand-gold group-hover:text-black transition-colors">
-              <Plus className="w-3.5 h-3.5 stroke-[3]" />
+            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-brand-gold/20 flex items-center justify-center group-hover:bg-brand-gold group-hover:text-black transition-colors">
+              <Plus className="w-3 h-3 sm:w-3.5 sm:h-3.5 stroke-[3]" />
             </div>
             <span>+ Add a stream ({totalCount}/6)</span>
           </button>
@@ -255,7 +255,7 @@ export function StageView() {
  */
 function SidecarTile({ stream, onFocus, onRemove }) {
   return (
-    <div className="group relative flex flex-col rounded-xl overflow-hidden bg-surface-card border border-border/80 hover:border-brand-gold/70 hover:shadow-glow-gold transition-all duration-200 select-none shrink-0 w-[240px] sm:w-[280px] lg:w-full">
+    <div className="group relative flex flex-col rounded-xl overflow-hidden bg-surface-card border border-border/80 hover:border-brand-gold/70 hover:shadow-glow-gold transition-all duration-200 select-none shrink-0 w-[200px] xs:w-[220px] sm:w-[260px] lg:w-full">
       {/* Tile Header */}
       <div className="flex items-center justify-between px-2.5 py-1.5 bg-surface-elevated border-b border-border/40 text-xs shrink-0">
         <div className="flex items-center gap-1.5 min-w-0">

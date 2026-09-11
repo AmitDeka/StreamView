@@ -115,19 +115,19 @@ export function AddStreamDrawer() {
       className="fixed inset-0 z-[10000] flex justify-end bg-black/70 backdrop-blur-sm transition-opacity"
     >
       {/* Drawer Container */}
-      <div className="relative w-full max-w-xl h-full bg-surface-elevated border-l border-border/80 flex flex-col shadow-2xl animate-slideLeft">
+      <div className="relative w-full max-w-full sm:max-w-xl h-full bg-surface-elevated border-l border-border/80 flex flex-col shadow-2xl animate-slideLeft">
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-border/60 bg-surface-card flex items-center justify-between">
+        <div className="p-3.5 sm:p-5 border-b border-border/60 bg-surface-card flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-brand-orange/20 border border-brand-orange/40 flex items-center justify-center text-brand-orange">
+            <div className="w-8 h-8 rounded-lg bg-brand-orange/20 border border-brand-orange/40 flex items-center justify-center text-brand-orange shrink-0">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-text-primary tracking-tight">
+              <h2 className="text-sm sm:text-base font-bold text-text-primary tracking-tight">
                 Add a Stream
               </h2>
-              <p className="text-xs text-text-secondary">
-                Discover related streams & expand your Multi View
+              <p className="text-[11px] sm:text-xs text-text-secondary">
+                Dedicated to Yatra RP · Discover related live streams
               </p>
             </div>
           </div>
@@ -143,7 +143,7 @@ export function AddStreamDrawer() {
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-5 space-y-3.5 sm:space-y-4">
           {/* Reference Stream Context Banner (if one is currently active) */}
           {activeReferenceStream && (
             <div className="p-3.5 rounded-xl bg-surface-card border border-border/80 space-y-2">
@@ -205,12 +205,12 @@ export function AddStreamDrawer() {
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-1.5 flex-wrap">
+                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin touch-pan-x sm:flex-wrap">
                     {/* All option */}
                     <button
                       type="button"
                       onClick={() => setActiveFilter("")}
-                      className={`text-xs px-2.5 py-1 rounded-md font-medium transition-all ${
+                      className={`text-xs px-2.5 py-1 rounded-md font-medium transition-all shrink-0 ${
                         activeFilter === ""
                           ? "bg-brand-gold text-black font-bold shadow-sm"
                           : "bg-surface-elevated text-text-secondary hover:text-white border border-border/60"
@@ -230,7 +230,7 @@ export function AddStreamDrawer() {
                             setActiveFilter(isChipActive ? "" : chip.value);
                             setSearchQuery("");
                           }}
-                          className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-md font-medium transition-all ${
+                          className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-md font-medium transition-all shrink-0 ${
                             isChipActive
                               ? "bg-brand-orange text-white font-bold shadow-sm ring-1 ring-brand-gold/60"
                               : "bg-surface-elevated text-text-primary hover:border-brand-orange/50 border border-border/70"
@@ -261,14 +261,15 @@ export function AddStreamDrawer() {
                 setSearchQuery(e.target.value);
                 if (activeFilter) setActiveFilter("");
               }}
-              placeholder="Search by username (e.g. xqc), category (GTA V), or #hashtag..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface-card border border-border/80 focus:border-brand-gold focus:outline-none focus:ring-1 focus:ring-brand-gold/60 text-sm text-text-primary placeholder:text-text-muted"
+              placeholder="Search by username, category, or #hashtag..."
+              className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-surface-card border border-border/80 focus:border-brand-gold focus:outline-none focus:ring-1 focus:ring-brand-gold/60 text-xs sm:text-sm text-text-primary placeholder:text-text-muted"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-text-muted hover:text-white"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 text-text-muted hover:text-white rounded-md transition-colors"
+                aria-label="Clear search"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -276,8 +277,8 @@ export function AddStreamDrawer() {
           </div>
 
           {/* Quick Trending Tags */}
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-[10px] font-bold text-text-muted uppercase flex items-center gap-1 mr-1">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin touch-pan-x sm:flex-wrap">
+            <span className="text-[10px] font-bold text-text-muted uppercase flex items-center gap-1 mr-1 shrink-0">
               <Flame className="w-3 h-3 text-brand-orange" />
               Trending:
             </span>
@@ -295,7 +296,7 @@ export function AddStreamDrawer() {
                       setActiveFilter("");
                     }
                   }}
-                  className={`text-[11px] px-2.5 py-0.5 rounded-full transition-colors cursor-pointer ${
+                  className={`text-[11px] px-2.5 py-0.5 rounded-full transition-colors cursor-pointer shrink-0 ${
                     isActive
                       ? "bg-brand-orange text-white font-semibold shadow-sm"
                       : "bg-surface-card hover:bg-surface-hover text-text-secondary hover:text-white border border-border/70 hover:border-brand-gold/50"
@@ -379,15 +380,15 @@ export function AddStreamDrawer() {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-border/70 bg-surface-card flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
+        <div className="p-3.5 sm:p-4 border-t border-border/70 bg-surface-card flex items-center justify-between gap-2.5">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <span className="text-xs text-text-muted">Selected:</span>
-            <span className="text-sm font-bold font-mono text-brand-gold">
+            <span className="text-xs sm:text-sm font-bold font-mono text-brand-gold">
               {selectedStreams.length}/6
             </span>
             {isFull && (
-              <span className="text-[10px] text-brand-orange bg-brand-orange/10 px-2 py-0.5 rounded border border-brand-orange/30">
-                Max 6 Reached
+              <span className="text-[10px] text-brand-orange bg-brand-orange/10 px-1.5 py-0.5 rounded border border-brand-orange/30">
+                Max 6
               </span>
             )}
           </div>
@@ -396,14 +397,14 @@ export function AddStreamDrawer() {
             <button
               type="button"
               onClick={closeDrawer}
-              className="px-4 py-2 rounded-lg text-xs font-semibold text-text-secondary hover:text-white hover:bg-surface-hover border border-border/60 transition-colors"
+              className="px-3.5 sm:px-4 py-2 rounded-lg text-xs font-semibold text-text-secondary hover:text-white hover:bg-surface-hover border border-border/60 transition-colors"
             >
               Cancel
             </button>
             <button
               type="button"
               onClick={closeDrawer}
-              className="flex items-center gap-1.5 px-5 py-2 rounded-lg text-xs font-bold bg-brand-gradient text-white shadow-glow-sm hover:opacity-95 transition-opacity"
+              className="flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-lg text-xs font-bold bg-brand-gradient text-white shadow-glow-sm hover:opacity-95 transition-opacity"
             >
               <Check className="w-3.5 h-3.5" />
               <span>Confirm</span>

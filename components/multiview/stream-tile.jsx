@@ -96,7 +96,7 @@ export function StreamTile({ stream, index, isSolo = false }) {
             rel="noopener noreferrer"
             title="Open on Kick"
             aria-label="Open on Kick"
-            className="p-1 rounded text-text-secondary hover:text-white hover:bg-surface-hover transition-colors"
+            className="p-1.5 sm:p-1 rounded-md text-text-secondary hover:text-white hover:bg-surface-hover transition-colors flex items-center justify-center"
           >
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
@@ -107,7 +107,7 @@ export function StreamTile({ stream, index, isSolo = false }) {
             onClick={() => removeStream(stream.id)}
             title="Remove Stream"
             aria-label="Remove Stream"
-            className="p-1 rounded text-text-secondary hover:text-brand-red hover:bg-surface-hover transition-colors"
+            className="p-1.5 sm:p-1 rounded-md text-text-secondary hover:text-brand-red hover:bg-surface-hover transition-colors flex items-center justify-center"
           >
             <X className="w-3.5 h-3.5" />
           </button>

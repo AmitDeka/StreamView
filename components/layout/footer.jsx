@@ -4,14 +4,14 @@ import { Github } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="w-full border-t border-border/50 bg-background-secondary/90 py-8 px-4 sm:px-6 lg:px-8 mt-auto">
+    <footer className="w-full border-t border-border/50 bg-background-secondary/90 pt-8 pb-16 sm:py-8 px-4 sm:px-6 lg:px-8 mt-auto">
       <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
         <div className="flex flex-col gap-1">
           <span className="text-sm font-semibold text-text-primary tracking-wide">
             {APP_NAME}
           </span>
           <p className="text-xs text-text-muted max-w-xl">
-            {APP_DISCLAIMER}
+            Dedicated with ❤️ to the Yatra RP community. {APP_DISCLAIMER}
           </p>
         </div>
 

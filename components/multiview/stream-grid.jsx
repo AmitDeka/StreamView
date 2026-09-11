@@ -49,29 +49,28 @@ export function StreamGrid() {
   const streamCount = selectedStreams.length;
 
   // Responsive grid classes based on exact stream count for Equal layout:
-  // - 2 streams: 50% / 50% (grid-cols-2)
-  // - 3 streams: 33.33% / 33.33% / 33.33% (grid-cols-3)
-  // - 4 streams: 50% with 4 equal (2x2 grid: grid-cols-2)
-  // - 5 & 6 streams ("after 5 same as 3"): 3 columns (grid-cols-3)
+  // - Mobile (<640px): 1 column stacked (prevents video squishing, full width viewing)
+  // - Tablet (640px - 1024px): 2 columns (comfortable viewing, 50% width)
+  // - Desktop (>=1024px): 2 or 3 columns
   const getGridClasses = () => {
     switch (streamCount) {
       case 1:
-        return "grid grid-cols-1 md:grid-cols-2 max-w-5xl mx-auto";
+        return "grid grid-cols-1 sm:grid-cols-2 max-w-5xl mx-auto";
       case 2:
-        return "grid grid-cols-1 md:grid-cols-2";
+        return "grid grid-cols-1 sm:grid-cols-2";
       case 3:
-        return "grid grid-cols-1 md:grid-cols-3";
+        return "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
       case 4:
-        return "grid grid-cols-1 md:grid-cols-2";
+        return "grid grid-cols-1 sm:grid-cols-2";
       case 5:
       case 6:
       default:
-        return "grid grid-cols-1 md:grid-cols-3";
+        return "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
     }
   };
 
   return (
-    <div className={`w-full gap-4 ${getGridClasses()} items-center justify-center my-auto`}>
+    <div className={`w-full gap-2.5 sm:gap-4 ${getGridClasses()} items-center justify-center my-auto`}>
       {/* Selected Streams */}
       {selectedStreams.map((stream, idx) => (
         <StreamTile key={stream.id || stream.channelName} stream={stream} index={idx} />

@@ -103,3 +103,12 @@ body {
 .glass-panel:hover {
   border-color: rgba(244, 197, 66, 0.4);
 }
+
+/* Hide scrollbar for touch swipe containers */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
