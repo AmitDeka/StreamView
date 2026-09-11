@@ -5,6 +5,7 @@ import { useMultiView } from "./multiview-context";
 import { StreamCard } from "./stream-card";
 import { extractDiscoverySignals } from "@/lib/discovery/signals";
 import { TRENDING_TAGS } from "@/lib/config";
+import { SearchTipBanner } from "@/components/common/search-tip-banner";
 import { X, Search, Sparkles, Hash, Gamepad2, Loader2, Check, Radio, Flame, User } from "lucide-react";
 
 export function AddStreamDrawer() {
@@ -275,6 +276,15 @@ export function AddStreamDrawer() {
               </button>
             )}
           </div>
+
+          {/* Discovery Tip Banner */}
+          <SearchTipBanner
+            className="w-full"
+            onExampleClick={(name) => {
+              setSearchQuery(name);
+              setActiveFilter("");
+            }}
+          />
 
           {/* Quick Trending Tags */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin touch-pan-x sm:flex-wrap">

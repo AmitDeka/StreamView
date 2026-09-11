@@ -1,11 +1,11 @@
 # StreamView 🎥
 
 > **Watch Multiple Kick Streams Together in an Adaptive Multi View Interface**  
-> *Dedicated with ❤️ to the Yatra RP Community*
+> _Dedicated with ❤️ to the Yatra RP Community_
 
 StreamView is a modern, open-source web application engineered for roleplay communities, esports followers, and gaming fans to discover connected live broadcasts on **Kick** and watch them simultaneously in an adaptive multi-view workspace using Kick's official embed players.
 
-[![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-gold?style=flat-square)](https://github.com/AmitDeka/StreamView/releases)
+[![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-gold?style=flat-square)](https://github.com/AmitDeka/StreamView/releases)
 [![Next.js 14](https://img.shields.io/badge/Next.js-14.2.15-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React 18](https://img.shields.io/badge/React-18.3.1-blue?style=flat-square&logo=react)](https://react.js.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
@@ -17,11 +17,13 @@ StreamView is a modern, open-source web application engineered for roleplay comm
 ## 🌟 Key Features
 
 ### 1. Dedicated to the Yatra RP Community ❤️
+
 - **Self-Learning Roleplay Engine**: Automatically identifies live Yatra Roleplay creators and Hindi streams down to single-digit view counts.
 - **Dynamic Community Discovery**: Seamlessly discovers active streamers across `#yatraroleplay`, `#yatrarp`, `yatra`, and Indian GTA RP servers (e.g. Hathoda, Qayzer4, OnHypeGamer, Kryzor9, Shreeplayz, CandidGaming, Thunderboltgaming, iMRocky, GamerGill, Stelvin777, and emerging community creators).
 - **Multi-POV Roleplay Viewing**: Watch criminal chases, police operations, courtrooms, and server storylines unfolding from multiple creator perspectives at the same time.
 
 ### 2. Dual Adaptive Layout Modes (1 to 6 Streams)
+
 - **Stage View**:
   - **1 to 3 Streams**: 3:1 Flex layout featuring a dominant **Left Main Stage** (75% width) and a clean single-column standby sidecar (25% width).
   - **4 to 6 Streams**: 2-column scrollable sidecar with gold-accented styling and smooth height synchronization via `ResizeObserver`.
@@ -34,24 +36,29 @@ StreamView is a modern, open-source web application engineered for roleplay comm
   - **Solo Mode**: Single-click maximization of any individual stream with audio focus.
 
 ### 3. Fully Optimized for Mobile & Tablet 📱
+
 - **Adaptive Breakpoints**: Custom UX for mobile phones (`<640px`), small tablets & foldables (`640px–768px`), and full-size tablets (`768px–1024px`).
 - **Touch-Momentum Standby Rail**: Secondary streams on mobile/tablet arrange in a smooth horizontal touch-swipe strip (`touch-pan-x`) with 1-tap **Swap to Main Stage** (saving mobile battery & bandwidth).
 - **Responsive Workspace Toolbar**: Universal Stage View / Equal Grid toggle and controls bar with 44px+ touch targets and safe bottom clearance.
 - **Expandable Add Stream Drawer**: Full-width on mobile with horizontally scrollable discovery tags.
 
 ### 4. Sticky 1-Click Bookmark FAB 🔖
+
 - **Persistent Bottom-Right Button**: Floating bookmark button with subtle pulsing indicator.
 - **Instant Browser Saving**: Detects client operating system (Windows, Mac, Mobile) and displays exact shortcut keys (`Ctrl+D` / `Cmd+D`) and 1-click URL copying.
 
 ### 5. Native Fullscreen Video Stage 🖥️
+
 - **Cockpit Fullscreen**: 1-click fullscreen mode for the entire video arena without browser borders or distraction.
 - **In-Fullscreen Stream Management**: Add, remove, or switch streams directly inside fullscreen without needing to exit.
 
 ### 6. Official Kick Embed Players ⚡
+
 - Strictly integrates Kick's official sandboxed iframe player (`https://player.kick.com/{channel}?autoplay=true`).
 - Zero video proxying, zero restreaming, zero tampering, and zero playback latency.
 
 ### 7. Search Engine Optimization (SEO) & Analytics 📈
+
 - **Google Analytics 4 (GA4)**: Built-in integration via `next/script` with `strategy="afterInteractive"` for zero page-load penalty.
 - **Dynamic Sitemap & Robots**: Native Next.js 14 `sitemap.js` and `robots.js` generating `/sitemap.xml` and `/robots.txt` for continuous search engine indexation.
 - **Schema.org Structured Data**: Integrated JSON-LD schemas (`WebSite` with Sitelinks SearchBox, `WebApplication`, `Organization`).
@@ -59,6 +66,7 @@ StreamView is a modern, open-source web application engineered for roleplay comm
 - **Targeted Gaming Keywords**: Pre-configured metadata for Kick multistreaming, Yatra RP, GTA V RP, and Hindi streaming communities.
 
 ### 8. Privacy-First Architecture 🔒
+
 - **Zero Personal Data Collection**: No sign-ups, accounts, logins, or trackers.
 - **Local Persistence**: Layout preferences, active streams, and audio settings are safely stored on device via `localStorage`.
 
@@ -161,7 +169,7 @@ KICK_CLIENT_ID=your_client_id_here
 KICK_CLIENT_SECRET=your_client_secret_here
 ```
 
-> *Note: Even without API credentials, StreamView directly queries Kick's live channel APIs to fetch real streamer profiles and stream embeds on demand.*
+> _Note: Even without API credentials, StreamView directly queries Kick's live channel APIs to fetch real streamer profiles and stream embeds on demand._
 
 ### 4. Run Development Server
 

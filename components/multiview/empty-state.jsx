@@ -5,6 +5,7 @@ import { useMultiView } from "./multiview-context";
 import { StreamCard } from "./stream-card";
 import { TRENDING_TAGS } from "@/lib/config";
 import { Search, Sparkles, Flame, Loader2, User, Hash, Gamepad2, Heart } from "lucide-react";
+import { SearchTipBanner } from "@/components/common/search-tip-banner";
 
 export function EmptyState() {
   const { addStream } = useMultiView();
@@ -61,7 +62,7 @@ export function EmptyState() {
       </p>
 
       {/* Search Input Box */}
-      <div className="w-full max-w-2xl relative mb-4 sm:mb-6">
+      <div className="w-full max-w-2xl relative mb-3 sm:mb-4">
         <Search className="absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-text-muted" />
         <input
           type="text"
@@ -74,6 +75,15 @@ export function EmptyState() {
           className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-surface-card border border-border/90 focus:border-brand-gold focus:ring-2 focus:ring-brand-gold/40 text-text-primary text-xs sm:text-base placeholder:text-text-muted shadow-2xl transition-all"
         />
       </div>
+
+      {/* Discovery Tip Banner */}
+      <SearchTipBanner
+        className="w-full max-w-2xl mb-4 sm:mb-5"
+        onExampleClick={(name) => {
+          setQuery(name);
+          if (activeTag) setActiveTag("");
+        }}
+      />
 
       {/* Trending Tags (Quick Filters) */}
       <div className="w-full max-w-2xl flex items-center justify-start sm:justify-center overflow-x-auto pb-1.5 sm:pb-0 scrollbar-thin touch-pan-x sm:flex-wrap gap-1.5 sm:gap-2 mb-6 sm:mb-10">
