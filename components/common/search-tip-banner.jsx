@@ -30,25 +30,34 @@ export function SearchTipBanner({ className = "", onExampleClick }) {
 
   return (
     <div
-      className={`relative flex items-start gap-2.5 p-2.5 sm:p-3 rounded-xl bg-brand-gold/10 border border-brand-gold/30 text-left transition-all ${className}`}
-    >
+      className={`relative flex items-start gap-2.5 p-2.5 sm:p-3 rounded-xl bg-brand-gold/10 border border-brand-gold/30 text-left transition-all ${className}`}>
       <Lightbulb className="w-4 h-4 text-brand-gold shrink-0 mt-0.5 animate-pulse" />
       <div className="flex-1 min-w-0 pr-5">
         <p className="text-[11px] sm:text-xs text-text-secondary leading-relaxed">
-          <strong className="text-brand-gold font-semibold">Discovery Tip:</strong> Due to Kick API limitations on hashtags, smaller streams may not always appear under <code className="text-brand-gold bg-black/40 px-1 py-0.5 rounded font-mono text-[10px] sm:text-[11px]">#tags</code>. If you can&apos;t find a stream, <strong className="text-text-primary">search directly by their Kick username</strong> (e.g.{" "}
+          <strong className="text-brand-gold font-semibold">
+            Discovery Tip:
+          </strong>{" "}
+          Due to Kick API limitations on hashtags, some streams may not always
+          appear under{" "}
+          <code className="text-brand-gold bg-black/40 px-1 py-0.5 rounded font-mono text-[10px] sm:text-[11px]">
+            #tags
+          </code>
+          . If you can&apos;t find a stream,{" "}
+          <strong className="text-text-primary">
+            search directly by their Kick username
+          </strong>{" "}
+          (e.g.{" "}
           <button
             type="button"
             onClick={() => onExampleClick && onExampleClick("hathoda")}
-            className="text-brand-gold hover:underline font-medium cursor-pointer"
-          >
+            className="text-brand-gold hover:underline font-medium cursor-pointer">
             hathoda
           </button>
           ,{" "}
           <button
             type="button"
             onClick={() => onExampleClick && onExampleClick("exion")}
-            className="text-brand-gold hover:underline font-medium cursor-pointer"
-          >
+            className="text-brand-gold hover:underline font-medium cursor-pointer">
             exion
           </button>
           ) to load them immediately.
@@ -58,8 +67,7 @@ export function SearchTipBanner({ className = "", onExampleClick }) {
         type="button"
         onClick={handleDismiss}
         title="Dismiss tip"
-        className="absolute top-2 right-2 p-1 text-text-muted hover:text-text-primary rounded-md hover:bg-surface-elevated transition-colors cursor-pointer"
-      >
+        className="top-2 right-2 text-text-muted hover:text-text-primary hover:bg-surface-elevated absolute p-1 transition-colors rounded-md cursor-pointer">
         <X className="w-3.5 h-3.5" />
       </button>
     </div>
