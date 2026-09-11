@@ -1,0 +1,38 @@
+name: Sync Yatra Streamers Roster
+
+on:
+  schedule:
+    # Run daily at 15:00 UTC (8:30 PM IST, prime-time for Indian GTA RP)
+    - cron: '0 15 * * *'
+    # Run daily at 18:30 UTC (12:00 AM IST, late-night GTA RP peak)
+    - cron: '30 18 * * *'
+  workflow_dispatch: # Allows manual run anytime from GitHub Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  sync-streamers:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Crawl Kick and Discover Yatra Streamers
+        id: sync
+        run: node scripts/sync-yatra-streamers.mjs
+
+      - name: Commit and Push if New Streamers Discovered
+        if: steps.sync.outputs.updated == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/yatra-streamers.json
+          git commit -m "chore(roster): auto-discover and add new Yatra streamers"
+          git push

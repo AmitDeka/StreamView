@@ -1,0 +1,21 @@
+# StreamView - Watch Multiple Kick Streams Together
+
+> StreamView is a high-performance web application that allows users to discover related live Kick streams and watch up to 6 streams simultaneously in customizable Stage View and Equal Grid layouts. Proudly dedicated to the Yatra Roleplay community.
+
+## Core Features
+- **Multi View Workspace**: Watch up to 6 live Kick streams simultaneously with synchronized layouts.
+- **Stage View**: Features 1 primary stream on a cinema stage with standby stream previews and one-click stream swapping.
+- **Equal Grid**: Balanced side-by-side grids (Single, 2-Stream 50/50, 3-Stream, 2x2 4-Stream, 6-Stream).
+- **Contextual Discovery**: Dynamically discovers related live streams via hashtags (#yatraroleplay, etc.), category signals, and streamer usernames.
+- **Official Player Integration**: Embeds official Kick video players directly with no stream proxying or tampering.
+
+## Key URLs
+- Home: https://stream-view-beige.vercel.app/
+- Multi View Workspace: https://stream-view-beige.vercel.app/multi-view
+- Terms of Service: https://stream-view-beige.vercel.app/terms
+- Privacy Policy: https://stream-view-beige.vercel.app/privacy
+
+## Technical Stack
+- Framework: Next.js 14 (App Router)
+- Styling: Tailwind CSS
+- Platform: Kick Live Streaming Platform

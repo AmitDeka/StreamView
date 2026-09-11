@@ -19,8 +19,8 @@ module.exports = {
         },
         text: {
           primary: "#F5F2F2",
-          secondary: "#A9A3A5",
-          muted: "#7A7476",
+          secondary: "#C5BFC1",
+          muted: "#A39DA0",
         },
         brand: {
           gold: "#F4C542",
