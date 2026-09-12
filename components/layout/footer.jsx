@@ -16,6 +16,10 @@ export function Footer() {
         </div>
 
         <div className="flex items-center gap-4 sm:gap-6 text-xs text-text-secondary flex-wrap justify-center sm:justify-end">
+          <Link href="/how-it-works" className="hover:text-brand-gold transition-colors">
+            How It Works
+          </Link>
+          <span className="text-border">•</span>
           <Link href="/multi-view" className="hover:text-brand-gold transition-colors">
             Multi View
           </Link>

@@ -45,6 +45,16 @@ export function Navbar() {
             Home
           </Link>
           <Link
+            href="/how-it-works"
+            className={`hidden xs:inline-flex px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
+              pathname === "/how-it-works"
+                ? "text-brand-gold bg-surface-elevated border border-border/70"
+                : "text-text-secondary hover:text-white hover:bg-surface-hover/50"
+            }`}
+          >
+            How It Works
+          </Link>
+          <Link
             href="/multi-view"
             className={`flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
               isMultiView

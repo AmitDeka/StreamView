@@ -5,7 +5,7 @@
 
 StreamView is a modern, open-source web application engineered for roleplay communities, esports followers, and gaming fans to discover connected live broadcasts on **Kick** and watch them simultaneously in an adaptive multi-view workspace using Kick's official embed players.
 
-[![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-gold?style=flat-square)](https://github.com/AmitDeka/StreamView/releases)
+[![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-gold?style=flat-square)](https://github.com/AmitDeka/StreamView/releases)
 [![Next.js 14](https://img.shields.io/badge/Next.js-14.2.15-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React 18](https://img.shields.io/badge/React-18.3.1-blue?style=flat-square&logo=react)](https://react.js.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)

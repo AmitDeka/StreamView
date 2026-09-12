@@ -39,12 +39,12 @@ export function HomeHero() {
             <ArrowRight className="w-4 h-4" />
           </Link>
 
-          <a
-            href="#how-it-works"
+          <Link
+            href="/how-it-works"
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl text-xs sm:text-sm font-semibold bg-surface-elevated text-text-primary border border-border/80 hover:border-brand-gold/50 hover:bg-surface-hover transition-colors"
           >
             <span>See How It Works</span>
-          </a>
+          </Link>
         </div>
       </div>
     </section>
