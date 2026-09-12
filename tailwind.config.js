@@ -7,6 +7,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-inter)", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
+        heading: ["var(--font-sora)", "sans-serif"],
+      },
       colors: {
         background: {
           DEFAULT: "#09070C",

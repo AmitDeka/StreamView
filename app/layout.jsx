@@ -1,10 +1,24 @@
 import "./globals.css";
+import { Inter, Sora } from "next/font/google";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { BookmarkFab } from "@/components/common/bookmark-fab";
 import { GoogleAnalytics } from "@/components/common/google-analytics";
 import { StructuredData } from "@/components/common/structured-data";
-import { APP_NAME, APP_TAGLINE, APP_DESCRIPTION, APP_URL } from "@/lib/config";
+import { APP_NAME, APP_TAGLINE, APP_DESCRIPTION, APP_URL, GA_TRACKING_ID } from "@/lib/config";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
+const sora = Sora({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-sora",
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 export const viewport = {
   themeColor: "#09070C",
@@ -91,7 +105,7 @@ export default function RootLayout({ children }) {
   const gaId = process.env.NEXT_PUBLIC_GA_ID || GA_TRACKING_ID;
 
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`dark ${inter.variable} ${sora.variable}`}>
       <head>
         <StructuredData />
         {gaId && (
@@ -114,7 +128,7 @@ export default function RootLayout({ children }) {
           </>
         )}
       </head>
-      <body className="bg-subtle-grid min-h-screen flex flex-col antialiased selection:bg-brand-orange selection:text-white">
+      <body className="bg-subtle-grid min-h-screen flex flex-col antialiased selection:bg-brand-orange selection:text-white font-sans">
         <Navbar />
         <main className="flex-1 flex flex-col">{children}</main>
         <Footer />
