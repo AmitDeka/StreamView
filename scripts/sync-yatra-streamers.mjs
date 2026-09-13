@@ -60,14 +60,14 @@ function isDifferentServer(title, tags) {
     const hashMatch = tag.match(/^#?([a-z0-9_]+?)(?:rp|roleplay)$/i);
     if (hashMatch) {
       const prefix = hashMatch[1].toLowerCase();
-      if (!GENERIC_PREFIXES.has(prefix)) return true;
+      if (!GENERIC_PREFIXES.has(prefix) && !prefix.startsWith("yatra")) return true;
     }
   }
 
   const titleRpMatches = tLower.matchAll(/\b([a-z0-9_]+)\s+(?:rp|roleplay)\b/gi);
   for (const match of titleRpMatches) {
     const prefix = match[1].toLowerCase();
-    if (!GENERIC_PREFIXES.has(prefix)) return true;
+    if (!GENERIC_PREFIXES.has(prefix) && !prefix.startsWith("yatra")) return true;
   }
 
   return false;
