@@ -265,6 +265,8 @@ const CANDIDATE_CHANNELS = [
   "tbone_gaming",
   "asukabae",
   "mackletv",
+  "baggaislive",
+  "itzzvegeta",
 ];
 
 async function run() {
