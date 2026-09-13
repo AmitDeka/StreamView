@@ -68,17 +68,77 @@ function isGenuineYatraStream(stream) {
 async function fetchKickFeed(url) {
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
+    const timeout = setTimeout(() => controller.abort(), 9000);
     const res = await fetch(url, { headers: HEADERS, signal: controller.signal });
     clearTimeout(timeout);
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.data?.livestreams || data.livestreams || (Array.isArray(data) ? data : []);
+    if (!res.ok) {
+      console.warn(`Feed HTTP ${res.status}: ${url}`);
+      return [];
+    }
+    const json = await res.json();
+    if (Array.isArray(json)) return json;
+    if (Array.isArray(json.data)) return json.data;
+    if (Array.isArray(json.data?.livestreams)) return json.data.livestreams;
+    if (Array.isArray(json.livestreams)) return json.livestreams;
+    return [];
   } catch (err) {
     console.warn(`Feed fetch failed for ${url}:`, err.message);
     return [];
   }
 }
+
+async function fetchChannelLivestream(slug) {
+  try {
+    const clean = String(slug).trim().toLowerCase();
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(`https://kick.com/api/v2/channels/${encodeURIComponent(clean)}`, {
+      headers: HEADERS,
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data?.livestream && data.livestream.is_live) {
+      return {
+        ...data.livestream,
+        channel: { slug: clean },
+      };
+    }
+    return null;
+  } catch (err) {
+    return null;
+  }
+}
+
+// Known community candidates to verify directly if absent from roster
+const CANDIDATE_CHANNELS = [
+  "shreeplayz",
+  "gunshot",
+  "hathoda",
+  "qayzer4",
+  "onhypegamer",
+  "imrocky",
+  "candidgaming",
+  "thunderboltgaming",
+  "kryzor9",
+  "chhabrasaab",
+  "gamergill",
+  "stelvin777",
+  "marcyxd",
+  "fluffy-gaming",
+  "ssplayzz",
+  "nikita_playzz",
+  "exion",
+  "prathmesh_gaming",
+  "ft-aqua-is-live",
+  "tvfonchi",
+  "rakazone",
+  "rakazonegaming",
+  "tbone_gaming",
+  "asukabae",
+  "mackletv",
+];
 
 async function run() {
   console.log("Starting Yatra Roleplay streamer discovery sync...");
@@ -96,16 +156,38 @@ async function run() {
   const currentSet = new Set(currentList.map((c) => String(c).trim().toLowerCase()));
   console.log(`Current roster has ${currentSet.size} creators.`);
 
-  // Query Kick GTA V (top, low-viewer ascending, page 2) and Hindi live feeds to catch 1-viewer streamers
-  const [gtaTop, gtaLowViewers, gtaPage2, hindiStreams] = await Promise.all([
-    fetchKickFeed("https://kick.com/api/v2/subcategories/grand-theft-auto-v/livestreams?limit=100"),
-    fetchKickFeed("https://kick.com/api/v2/subcategories/grand-theft-auto-v/livestreams?limit=100&sort=viewers_asc"),
-    fetchKickFeed("https://kick.com/api/v2/subcategories/grand-theft-auto-v/livestreams?limit=100&page=2"),
-    fetchKickFeed("https://kick.com/api/v2/languages/hi/livestreams?limit=100"),
+  // 1. Working Kick directory endpoints:
+  // - Top GTA V streams (sort=desc, pages 1-3)
+  // - Low viewer GTA V streams (sort=asc, pages 1-4) to discover 0-10 viewer creators
+  // - Recent GTA V streams (newest broadcasts)
+  // - Regional Hindi feeds
+  const feedUrls = [
+    "https://kick.com/stream/livestreams/en?subcategory=grand-theft-auto-v&sort=desc&limit=50&page=1",
+    "https://kick.com/stream/livestreams/en?subcategory=grand-theft-auto-v&sort=desc&limit=50&page=2",
+    "https://kick.com/stream/livestreams/en?subcategory=grand-theft-auto-v&sort=desc&limit=50&page=3",
+    "https://kick.com/stream/livestreams/en?subcategory=grand-theft-auto-v&sort=asc&limit=50&page=1",
+    "https://kick.com/stream/livestreams/en?subcategory=grand-theft-auto-v&sort=asc&limit=50&page=2",
+    "https://kick.com/stream/livestreams/en?subcategory=grand-theft-auto-v&sort=asc&limit=50&page=3",
+    "https://kick.com/stream/livestreams/en?subcategory=grand-theft-auto-v&sort=asc&limit=50&page=4",
+    "https://kick.com/stream/livestreams/en?subcategory=grand-theft-auto-v&limit=50&page=1",
+    "https://kick.com/stream/livestreams/hi",
+    "https://kick.com/stream/featured-livestreams/hi",
+  ];
+
+  // Candidates not in the current roster to probe directly
+  const missingCandidates = CANDIDATE_CHANNELS.filter((c) => !currentSet.has(c));
+
+  const [feedResults, candidateResults] = await Promise.all([
+    Promise.all(feedUrls.map((url) => fetchKickFeed(url))),
+    Promise.all(missingCandidates.map((slug) => fetchChannelLivestream(slug))),
   ]);
 
-  const allStreams = [...gtaTop, ...gtaLowViewers, ...gtaPage2, ...hindiStreams];
-  console.log(`Fetched ${allStreams.length} total live streams across multiple Kick feeds to analyze.`);
+  const allStreams = [
+    ...feedResults.flat(),
+    ...candidateResults.filter(Boolean),
+  ];
+
+  console.log(`Fetched ${allStreams.length} total live streams across Kick feeds and candidates.`);
 
   const discovered = new Set();
   for (const s of allStreams) {
