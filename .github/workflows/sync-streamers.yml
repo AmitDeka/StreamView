@@ -33,6 +33,9 @@ jobs:
 
       - name: Crawl Kick and Discover Yatra Streamers
         id: sync
+        env:
+          KICK_CLIENT_ID: ${{ secrets.KICK_CLIENT_ID }}
+          KICK_CLIENT_SECRET: ${{ secrets.KICK_CLIENT_SECRET }}
         run: node scripts/sync-yatra-streamers.mjs
 
       - name: Commit and Push if New Streamers Discovered
