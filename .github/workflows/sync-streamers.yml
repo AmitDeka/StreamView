@@ -2,18 +2,21 @@ name: Sync Yatra Streamers Roster
 
 on:
   schedule:
-    # 6:30 PM IST (13:00 UTC) - First wave (streamers starting between 6:00 PM - 6:30 PM)
-    - cron: '0 13 * * *'
-    # 7:30 PM IST (14:00 UTC) - Evening wave (streamers starting around 7:00 PM)
+    # 7:30 PM IST (14:00 UTC) - Evening stream wave
     - cron: '0 14 * * *'
-    # 9:30 PM IST (16:00 UTC) - Prime-time wave (streamers starting between 9:00 PM - 10:00 PM)
+    # 9:30 PM IST (16:00 UTC) - Prime-time wave
     - cron: '0 16 * * *'
-    # 12:00 AM IST (18:30 UTC) - Late-night roleplay peak
-    - cron: '30 18 * * *'
+    # 11:30 PM IST (18:00 UTC) - Late-night roleplay peak
+    - cron: '0 18 * * *'
+    # 1:30 AM IST (20:00 UTC) - Post-midnight stream wave
+    - cron: '0 20 * * *'
   workflow_dispatch: # Allows manual run anytime from GitHub Actions tab
 
 permissions:
   contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   sync-streamers:
@@ -26,7 +29,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Crawl Kick and Discover Yatra Streamers
         id: sync
