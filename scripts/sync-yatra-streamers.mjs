@@ -293,7 +293,9 @@ async function run() {
     console.log("Kick OAuth token acquired. Using official Kick Developer API v1 (bypasses Cloudflare).");
     const apiEndpoints = [
       "https://api.kick.com/public/v1/livestreams?category_id=8&limit=100",
+      "https://api.kick.com/public/v1/livestreams?language=en&category_id=8&limit=100",
       "https://api.kick.com/public/v1/livestreams?language=hi&category_id=8&limit=100",
+      "https://api.kick.com/public/v1/livestreams?language=en&limit=100",
       "https://api.kick.com/public/v1/livestreams?language=hi&limit=100",
       "https://api.kick.com/public/v1/livestreams?limit=100",
     ];
