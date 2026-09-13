@@ -10,10 +10,11 @@
 - **Official Player Integration**: Embeds official Kick video players directly with no stream proxying or tampering.
 
 ## Key URLs
-- Home: https://stream-view-beige.vercel.app/
-- Multi View Workspace: https://stream-view-beige.vercel.app/multi-view
-- Terms of Service: https://stream-view-beige.vercel.app/terms
-- Privacy Policy: https://stream-view-beige.vercel.app/privacy
+- Home: https://streamview.in/
+- Multi View Workspace: https://streamview.in/multi-view
+- How It Works: https://streamview.in/how-it-works
+- Terms of Service: https://streamview.in/terms
+- Privacy Policy: https://streamview.in/privacy
 
 ## Technical Stack
 - Framework: Next.js 14 (App Router)
