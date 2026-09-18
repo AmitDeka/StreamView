@@ -178,7 +178,7 @@ export default function HowItWorksPage() {
 
               <div className="mt-6 pt-4 border-t border-border/50 text-[11px] text-text-muted flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5 text-brand-orange" />
-                <span>Runs daily at: <strong>7:30 PM, 9:30 PM, 11:30 PM &amp; 1:30 AM IST</strong></span>
+                <span>Runs daily at: <strong>7:35 PM, 9:35 PM, 11:35 PM &amp; 1:35 AM IST</strong></span>
               </div>
             </div>
           </div>

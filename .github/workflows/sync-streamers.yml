@@ -2,14 +2,14 @@ name: Sync Yatra Streamers Roster
 
 on:
   schedule:
-    # 7:30 PM IST (14:00 UTC) - Evening stream wave
-    - cron: '0 14 * * *'
-    # 9:30 PM IST (16:00 UTC) - Prime-time wave
-    - cron: '0 16 * * *'
-    # 11:30 PM IST (18:00 UTC) - Late-night roleplay peak
-    - cron: '0 18 * * *'
-    # 1:30 AM IST (20:00 UTC) - Post-midnight stream wave
-    - cron: '0 20 * * *'
+    # 7:35 PM IST (14:05 UTC) - Evening stream wave (bypasses top-of-hour queue)
+    - cron: '5 14 * * *'
+    # 9:35 PM IST (16:05 UTC) - Prime-time wave
+    - cron: '5 16 * * *'
+    # 11:35 PM IST (18:05 UTC) - Late-night roleplay peak
+    - cron: '5 18 * * *'
+    # 1:35 AM IST (20:05 UTC) - Post-midnight stream wave
+    - cron: '5 20 * * *'
   workflow_dispatch: # Allows manual run anytime from GitHub Actions tab
 
 permissions:
