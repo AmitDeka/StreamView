@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useMultiView } from "./multiview-context";
 import { StreamTile } from "./stream-tile";
 import { KickPlayer } from "@/components/kick/kick-player";
+import { YouTubePlayer } from "@/components/youtube/youtube-player";
 import { Plus, X, ExternalLink, ArrowLeftRight } from "lucide-react";
 import { KICK_CHANNEL_BASE_URL } from "@/lib/config";
 
@@ -111,10 +112,14 @@ export function StageView() {
 
             <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
               <a
-                href={`${KICK_CHANNEL_BASE_URL}/${mainStream.channelName}`}
+                href={
+                  mainStream.platform === "youtube"
+                    ? (mainStream.customUrl || `https://www.youtube.com/watch?v=${mainStream.youtubeVideoId}`)
+                    : `${KICK_CHANNEL_BASE_URL}/${mainStream.channelName}`
+                }
                 target="_blank"
                 rel="noopener noreferrer"
-                title="Open on Kick"
+                title={mainStream.platform === "youtube" ? "Open on YouTube" : "Open on Kick"}
                 className="p-1 sm:p-1.5 rounded text-text-secondary hover:text-white hover:bg-surface-hover transition-colors"
               >
                 <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -131,9 +136,13 @@ export function StageView() {
             </div>
           </div>
 
-          {/* Large Kick Video Player */}
+          {/* Video Player (Kick or YouTube) */}
           <div className="relative aspect-video w-full bg-black">
-            <KickPlayer channel={mainStream.channelName} />
+            {mainStream.platform === "youtube" ? (
+              <YouTubePlayer videoId={mainStream.youtubeVideoId} />
+            ) : (
+              <KickPlayer channel={mainStream.channelName} />
+            )}
           </div>
 
           {/* Main Stage Meta Footer */}
@@ -251,6 +260,11 @@ function SidecarTile({ stream, onFocus, onRemove }) {
           <span className="font-bold text-text-primary text-[11px] truncate">
             {stream.channelName}
           </span>
+          {stream.platform === "youtube" && (
+            <span className="text-[9px] px-1 py-0.2 rounded bg-red-600/20 text-red-400 border border-red-500/30 font-bold shrink-0">
+              YT
+            </span>
+          )}
         </div>
 
         <div className="flex items-center gap-1.5 shrink-0">
@@ -276,9 +290,13 @@ function SidecarTile({ stream, onFocus, onRemove }) {
         </div>
       </div>
 
-      {/* DESKTOP (lg:): Full Kick Player Live Embed */}
+      {/* DESKTOP (lg:): Live Embed (Kick or YouTube) */}
       <div className="hidden lg:block relative aspect-video w-full bg-black">
-        <KickPlayer channel={stream.channelName} muted={true} />
+        {stream.platform === "youtube" ? (
+          <YouTubePlayer videoId={stream.youtubeVideoId} muted={true} />
+        ) : (
+          <KickPlayer channel={stream.channelName} muted={true} />
+        )}
       </div>
 
       {/* MOBILE (< lg:): Clean thumbnail with Tap to Swap (no heavy background iframe) */}

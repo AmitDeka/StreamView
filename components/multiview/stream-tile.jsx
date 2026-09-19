@@ -1,6 +1,7 @@
 "use client";
 
 import { KickPlayer } from "@/components/kick/kick-player";
+import { YouTubePlayer } from "@/components/youtube/youtube-player";
 import { useMultiView } from "./multiview-context";
 import { KICK_CHANNEL_BASE_URL } from "@/lib/config";
 import { X, ExternalLink, Volume2, VolumeX } from "lucide-react";
@@ -54,6 +55,11 @@ export function StreamTile({ stream, isSolo = false }) {
           <span className="font-bold text-xs text-text-primary truncate">
             {stream.channelName}
           </span>
+          {stream.platform === "youtube" && (
+            <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-[#FF0000] text-white shrink-0">
+              YT
+            </span>
+          )}
         </div>
 
         {/* Minimal Outer Controls */}
@@ -88,13 +94,17 @@ export function StreamTile({ stream, isSolo = false }) {
             </button>
           )}
 
-          {/* Open on Kick */}
+          {/* Open on YouTube or Kick */}
           <a
-            href={`${KICK_CHANNEL_BASE_URL}/${stream.channelName}`}
+            href={
+              stream.platform === "youtube"
+                ? (stream.customUrl || `https://www.youtube.com/watch?v=${stream.youtubeVideoId}`)
+                : `${KICK_CHANNEL_BASE_URL}/${stream.channelName}`
+            }
             target="_blank"
             rel="noopener noreferrer"
-            title="Open on Kick"
-            aria-label="Open on Kick"
+            title={stream.platform === "youtube" ? "Open on YouTube" : "Open on Kick"}
+            aria-label={stream.platform === "youtube" ? "Open on YouTube" : "Open on Kick"}
             className="p-1.5 sm:p-1 rounded-md text-text-secondary hover:text-white hover:bg-surface-hover transition-colors flex items-center justify-center"
           >
             <ExternalLink className="w-3.5 h-3.5" />
@@ -113,9 +123,13 @@ export function StreamTile({ stream, isSolo = false }) {
         </div>
       </div>
 
-      {/* Official Kick Video Player Iframe */}
+      {/* Official Video Player Iframe (Kick or YouTube) */}
       <div className="relative aspect-video w-full bg-black">
-        <KickPlayer channel={stream.channelName} muted={!isAudioActive} />
+        {stream.platform === "youtube" ? (
+          <YouTubePlayer videoId={stream.youtubeVideoId} muted={!isAudioActive} />
+        ) : (
+          <KickPlayer channel={stream.channelName} muted={!isAudioActive} />
+        )}
       </div>
 
       {/* Stream Meta Footer */}

@@ -4,9 +4,20 @@ import { useState, useEffect, useRef } from "react";
 import { useMultiView } from "./multiview-context";
 import { StreamCard } from "./stream-card";
 import { TRENDING_TAGS } from "@/lib/config";
-import { Search, Sparkles, Flame, Loader2, Heart } from "lucide-react";
+import { Search, Sparkles, Flame, Loader2, Heart, Plus } from "lucide-react";
 import { SearchTipBanner } from "@/components/common/search-tip-banner";
 import { getKnownYatraParam, saveYatraChannel } from "@/lib/discovery/client-storage";
+import { extractYouTubeVideoId } from "@/lib/youtube/resolve";
+
+function isYouTubeInput(str) {
+  if (!str) return false;
+  const s = String(str).trim();
+  return (
+    s.includes("youtube.com") ||
+    s.includes("youtu.be") ||
+    Boolean(extractYouTubeVideoId(s))
+  );
+}
 
 export function EmptyState() {
   const { addStream } = useMultiView();
@@ -17,9 +28,56 @@ export function EmptyState() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [limit, setLimit] = useState(20);
+  const [ytStream, setYtStream] = useState(null);
+  const [isYtResolving, setIsYtResolving] = useState(false);
+  const [ytError, setYtError] = useState("");
 
   const term = (query || activeTag || "").trim();
   const prevTermRef = useRef(term);
+
+  useEffect(() => {
+    const trimmed = query.trim();
+    if (!isYouTubeInput(trimmed)) {
+      setYtStream(null);
+      setIsYtResolving(false);
+      setYtError("");
+      return;
+    }
+
+    let isMounted = true;
+    setIsYtResolving(true);
+    setYtError("");
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/youtube/resolve?url=${encodeURIComponent(trimmed)}`);
+        const json = await res.json();
+        if (isMounted) {
+          if (json.success && json.data) {
+            setYtStream(json.data);
+            setYtError("");
+          } else {
+            setYtStream(null);
+            setYtError(json.error || "Could not resolve YouTube stream from this link");
+          }
+        }
+      } catch (err) {
+        if (isMounted) {
+          setYtStream(null);
+          setYtError("Failed to resolve YouTube stream");
+        }
+      } finally {
+        if (isMounted) {
+          setIsYtResolving(false);
+        }
+      }
+    }, 280);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
+  }, [query]);
 
   useEffect(() => {
     let isMounted = true;
@@ -29,6 +87,12 @@ export function EmptyState() {
       if (limit !== 20) {
         setLimit(20);
       }
+    }
+
+    if (term && isYouTubeInput(term)) {
+      setIsLoading(false);
+      setIsLoadingMore(false);
+      return;
     }
 
     const currentLimit = isNewSearch ? 20 : limit;
@@ -107,10 +171,79 @@ export function EmptyState() {
             if (activeTag) setActiveTag("");
             setLimit(20);
           }}
-          placeholder="Search by username, category, or #hashtag..."
+          placeholder="Search by username, category, #hashtag, or paste YouTube URL..."
           className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-surface-card border border-border/90 focus:border-brand-gold focus:ring-2 focus:ring-brand-gold/40 text-text-primary text-xs sm:text-base placeholder:text-text-muted shadow-2xl transition-all"
         />
       </div>
+
+      {/* YouTube Paste Support Notice */}
+      <div className="w-full max-w-2xl flex items-center justify-between px-3.5 py-2 rounded-xl bg-surface-card border border-border/70 text-[11px] text-text-muted mb-3 sm:mb-4 shadow-sm">
+        <span className="flex items-center gap-2 text-text-secondary font-medium truncate">
+          <span className="w-2 h-2 rounded-full bg-[#FF0000] shrink-0" />
+          <span className="truncate">Supports YouTube Live streams & videos — paste any link above</span>
+        </span>
+        <span className="text-text-muted text-[10px] shrink-0 hidden xs:inline ml-2">watch, youtu.be, /live</span>
+      </div>
+
+      {/* YouTube Resolving State */}
+      {isYtResolving && (
+        <div className="w-full max-w-2xl mx-auto p-4 rounded-2xl bg-surface-card border border-red-500/40 flex items-center justify-center gap-3 mb-4 shadow-lg">
+          <Loader2 className="w-5 h-5 text-[#FF0000] animate-spin" />
+          <span className="text-xs sm:text-sm text-text-primary font-medium">
+            Resolving YouTube stream details...
+          </span>
+        </div>
+      )}
+
+      {/* YouTube Stream Detected Card */}
+      {ytStream && (
+        <div className="w-full max-w-2xl mx-auto p-3.5 sm:p-4 rounded-2xl bg-surface-card border-2 border-red-500/60 shadow-xl flex flex-col sm:flex-row items-center gap-4 mb-5 text-left">
+          <div className="relative aspect-video w-full sm:w-48 rounded-xl overflow-hidden bg-black shrink-0">
+            <img
+              src={ytStream.thumbnailUrl}
+              alt={ytStream.title}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-[#FF0000] text-white font-extrabold text-[10px] tracking-wider uppercase shadow-md">
+              YouTube
+            </div>
+          </div>
+          <div className="flex-1 min-w-0 w-full space-y-1.5">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-sm text-text-primary truncate">
+                {ytStream.channelName}
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 font-semibold border border-red-500/30 shrink-0">
+                Ready to Watch
+              </span>
+            </div>
+            <p className="text-xs text-text-secondary line-clamp-2 leading-relaxed" title={ytStream.title}>
+              {ytStream.title}
+            </p>
+            <div className="pt-1.5">
+              <button
+                type="button"
+                onClick={() => {
+                  addStream(ytStream);
+                  setQuery("");
+                  setYtStream(null);
+                }}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#FF0000] hover:bg-[#CC0000] text-white text-xs font-bold transition-all shadow-md hover:scale-[1.02] cursor-pointer"
+              >
+                <Plus className="w-4 h-4 stroke-[3]" />
+                <span>Add YouTube Stream to Multi View</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* YouTube Resolve Error */}
+      {ytError && isYouTubeInput(query) && (
+        <div className="w-full max-w-2xl mx-auto p-3 rounded-xl bg-surface-card border border-red-500/40 text-xs text-red-400 mb-4 text-left">
+          {ytError}
+        </div>
+      )}
 
       {/* Discovery Tip Banner */}
       <SearchTipBanner
