@@ -24,7 +24,7 @@ export function HomeHero() {
 
         {/* Subtitle with Yatra RP dedication */}
         <p className="text-sm sm:text-lg text-text-secondary max-w-2xl mb-8 sm:mb-10 leading-relaxed px-2">
-          This website is proudly dedicated to the <strong className="text-brand-gold font-semibold">Yatra RP community</strong>. Discover connected live Kick streams and build your custom Multi View to watch every roleplay storyline and gaming event from multiple angles simultaneously.
+          This website is proudly dedicated to the <strong className="text-brand-gold font-semibold">Yatra RP community</strong>. Discover connected live Kick streams, add custom YouTube broadcasts, and build your custom Multi View to watch every roleplay storyline and gaming event from multiple angles simultaneously.
         </p>
 
         {/* CTA Buttons */}

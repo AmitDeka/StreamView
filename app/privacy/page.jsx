@@ -73,13 +73,13 @@ export default function PrivacyPage() {
         <section className="space-y-3 p-6 rounded-2xl bg-surface-card border border-border/70">
           <div className="flex items-center gap-2.5 text-base font-bold text-text-primary">
             <Globe className="w-5 h-5 text-brand-pink" />
-            <h2>3. Third-Party Embeds (Kick Video Player)</h2>
+            <h2>3. Third-Party Embeds (Kick and YouTube Players)</h2>
           </div>
           <p>
-            {APP_NAME} uses Kick&apos;s official iframe embed player (<code className="px-1.5 py-0.5 rounded bg-surface-elevated text-brand-gold text-xs">player.kick.com</code>) to display live video broadcasts.
+            {APP_NAME} uses Kick&apos;s official iframe embed player (<code className="px-1.5 py-0.5 rounded bg-surface-elevated text-brand-gold text-xs">player.kick.com</code>) and YouTube&apos;s privacy-enhanced embed player (<code className="px-1.5 py-0.5 rounded bg-surface-elevated text-brand-gold text-xs">youtube-nocookie.com</code>) to display video broadcasts.
           </p>
           <p>
-            When an embedded video player loads, your browser establishes a direct connection with Kick&apos;s servers. Kick may process your IP address, browser telemetry, or set functional cookies required for video streaming in accordance with{" "}
+            When an embedded video player loads, your browser establishes a direct connection with the respective platform&apos;s servers. Viewing is subject to{" "}
             <a
               href="https://kick.com/privacy-policy"
               target="_blank"
@@ -87,6 +87,15 @@ export default function PrivacyPage() {
               className="text-brand-gold hover:underline font-medium"
             >
               Kick&apos;s Privacy Policy
+            </a>
+            {" "}and{" "}
+            <a
+              href="https://policies.google.com/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-gold hover:underline font-medium"
+            >
+              Google Privacy Policy
             </a>
             .
           </p>

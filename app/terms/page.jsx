@@ -66,10 +66,10 @@ export default function TermsPage() {
         <section className="space-y-3 p-6 rounded-2xl bg-surface-card border border-border/70">
           <div className="flex items-center gap-2.5 text-base font-bold text-text-primary">
             <ExternalLink className="w-5 h-5 text-brand-orange" />
-            <h2>2. Official Kick Embed Player Compliance</h2>
+            <h2>2. Official Kick & YouTube Embed Player Compliance</h2>
           </div>
           <p>
-            All video broadcasts rendered within {APP_NAME} utilize Kick&apos;s official iframe player (<code className="px-1.5 py-0.5 rounded bg-surface-elevated text-brand-gold text-xs">player.kick.com</code>).
+            All video broadcasts rendered within {APP_NAME} utilize official iframe players from Kick (<code className="px-1.5 py-0.5 rounded bg-surface-elevated text-brand-gold text-xs">player.kick.com</code>) and YouTube (<code className="px-1.5 py-0.5 rounded bg-surface-elevated text-brand-gold text-xs">youtube-nocookie.com</code>).
           </p>
           <p>
             {APP_NAME} does not re-broadcast, capture, proxy, or alter the underlying video bitstream in any way. Stream viewing is subject to{" "}
@@ -80,6 +80,15 @@ export default function TermsPage() {
               className="text-brand-gold hover:underline font-medium"
             >
               Kick&apos;s Terms of Service
+            </a>
+            {" "}and the{" "}
+            <a
+              href="https://www.youtube.com/t/terms"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-gold hover:underline font-medium"
+            >
+              YouTube Terms of Service
             </a>
             .
           </p>

@@ -1,11 +1,11 @@
 # StreamView 🎥
 
-> **Watch Multiple Kick Streams Together in an Adaptive Multi View Interface**  
+> **Watch Multiple Kick & YouTube Streams Together in an Adaptive Multi View Interface**  
 > _Dedicated with ❤️ to the Yatra RP Community_
 
-StreamView is a modern, open-source web application engineered for roleplay communities, esports followers, and gaming fans to discover connected live broadcasts on **Kick** and watch them simultaneously in an adaptive multi-view workspace using Kick's official embed players.
+StreamView is a modern, open-source web application engineered for roleplay communities, esports followers, and gaming fans to discover connected live broadcasts on **Kick** and **YouTube** and watch them simultaneously in an adaptive multi-view workspace using official embed players.
 
-[![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-gold?style=flat-square)](https://github.com/AmitDeka/StreamView/releases)
+[![Version: 1.4.0](https://img.shields.io/badge/Version-1.4.0-gold?style=flat-square)](https://github.com/AmitDeka/StreamView/releases)
 [![Next.js 14](https://img.shields.io/badge/Next.js-14.2.15-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React 18](https://img.shields.io/badge/React-18.3.1-blue?style=flat-square&logo=react)](https://react.js.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
@@ -22,7 +22,14 @@ StreamView is a modern, open-source web application engineered for roleplay comm
 - **Dynamic Community Discovery**: Seamlessly discovers active streamers across `#yatraroleplay`, `#yatrarp`, `yatra`, and Indian GTA RP servers (e.g. Hathoda, Qayzer4, OnHypeGamer, Kryzor9, Shreeplayz, CandidGaming, Thunderboltgaming, iMRocky, GamerGill, Stelvin777, and emerging community creators).
 - **Multi-POV Roleplay Viewing**: Watch criminal chases, police operations, courtrooms, and server storylines unfolding from multiple creator perspectives at the same time.
 
-### 2. Dual Adaptive Layout Modes (1 to 6 Streams)
+### 2. Dual-Platform Multi View (Kick & YouTube) ⚡
+
+- **Custom YouTube Stream & Video URL Support**: Paste any YouTube link (`watch?v=`, `youtu.be/`, `/live/`, `@channel/live`, or direct 11-char video ID) into the search bar or drawer to instantly resolve channel details and watch alongside Kick streams.
+- **Instant oEmbed Metadata Resolution**: Fast zero-auth retrieval of video title, channel name, and thumbnail using YouTube's official oEmbed API.
+- **Privacy-Enhanced Official Embeds**: Powered by `youtube-nocookie.com/embed/{videoId}` with automated audio synchronization, mute switching, and responsive player skeletons.
+- **Unified Stage & Equal Grid Modes**: Seamlessly mix, swap, or tile Kick and YouTube streams in either Stage View or Equal Grid with individual audio controls.
+
+### 3. Dual Adaptive Layout Modes (1 to 6 Streams)
 
 - **Stage View**:
   - **1 to 3 Streams**: 3:1 Flex layout featuring a dominant **Left Main Stage** (75% width) and a clean single-column standby sidecar (25% width).
@@ -35,29 +42,29 @@ StreamView is a modern, open-source web application engineered for roleplay comm
   - **5 & 6 Streams**: 3-column arrangement on desktop / 2-column on tablets.
   - **Solo Mode**: Single-click maximization of any individual stream with audio focus.
 
-### 3. Fully Optimized for Mobile & Tablet 📱
+### 4. Fully Optimized for Mobile & Tablet 📱
 
 - **Adaptive Breakpoints**: Custom UX for mobile phones (`<640px`), small tablets & foldables (`640px–768px`), and full-size tablets (`768px–1024px`).
 - **Touch-Momentum Standby Rail**: Secondary streams on mobile/tablet arrange in a smooth horizontal touch-swipe strip (`touch-pan-x`) with 1-tap **Swap to Main Stage** (saving mobile battery & bandwidth).
 - **Responsive Workspace Toolbar**: Universal Stage View / Equal Grid toggle and controls bar with 44px+ touch targets and safe bottom clearance.
 - **Expandable Add Stream Drawer**: Full-width on mobile with horizontally scrollable discovery tags.
 
-### 4. Sticky 1-Click Bookmark FAB 🔖
+### 5. Sticky 1-Click Bookmark FAB 🔖
 
 - **Persistent Bottom-Right Button**: Floating bookmark button with subtle pulsing indicator.
 - **Instant Browser Saving**: Detects client operating system (Windows, Mac, Mobile) and displays exact shortcut keys (`Ctrl+D` / `Cmd+D`) and 1-click URL copying.
 
-### 5. Native Fullscreen Video Stage 🖥️
+### 6. Native Fullscreen Video Stage 🖥️
 
 - **Cockpit Fullscreen**: 1-click fullscreen mode for the entire video arena without browser borders or distraction.
 - **In-Fullscreen Stream Management**: Add, remove, or switch streams directly inside fullscreen without needing to exit.
 
-### 6. Official Kick Embed Players ⚡
+### 7. Official Embed Players Compliance 🛡️
 
-- Strictly integrates Kick's official sandboxed iframe player (`https://player.kick.com/{channel}?autoplay=true`).
+- Strictly integrates Kick's official iframe player (`https://player.kick.com/{channel}?autoplay=true`) and YouTube's official privacy-enhanced player (`https://www.youtube-nocookie.com/embed/{videoId}`).
 - Zero video proxying, zero restreaming, zero tampering, and zero playback latency.
 
-### 7. Search Engine Optimization (SEO) & Analytics 📈
+### 8. Search Engine Optimization (SEO) & Analytics 📈
 
 - **Google Analytics 4 (GA4)**: Built-in integration via `next/script` with `strategy="afterInteractive"` for zero page-load penalty.
 - **Dynamic Sitemap & Robots**: Native Next.js 14 `sitemap.js` and `robots.js` generating `/sitemap.xml` and `/robots.txt` for continuous search engine indexation.
@@ -65,7 +72,7 @@ StreamView is a modern, open-source web application engineered for roleplay comm
 - **Dynamic OpenGraph Social Cards**: Automatic 1200x630 social preview card generation via `app/opengraph-image.jsx` using `next/og` Edge runtime.
 - **Targeted Gaming Keywords**: Pre-configured metadata for Kick multistreaming, Yatra RP, GTA V RP, and Hindi streaming communities.
 
-### 8. Privacy-First Architecture 🔒
+### 9. Privacy-First Architecture 🔒
 
 - **Zero Personal Data Collection**: No sign-ups, accounts, logins, or trackers.
 - **Local Persistence**: Layout preferences, active streams, and audio settings are safely stored on device via `localStorage`.
@@ -80,7 +87,7 @@ StreamView is a modern, open-source web application engineered for roleplay comm
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Analytics**: Google Analytics 4 (GA4)
 - **SEO**: Schema.org JSON-LD, Dynamic `sitemap.xml`, `robots.txt`, `next/og`
-- **Data Fetching**: Native Fetch API with direct Kick live channel & stream API integration
+- **Data Fetching**: Native Fetch API with direct Kick live channel APIs and YouTube oEmbed endpoint
 - **Class Utilities**: `clsx`, `tailwind-merge`
 
 ---
@@ -91,11 +98,13 @@ StreamView is a modern, open-source web application engineered for roleplay comm
 StreamView/
 ├── app/
 │   ├── api/
-│   │   └── kick/
-│   │       ├── channel/route.js        # Official Kick channel profile proxy
-│   │       ├── related/route.js        # Contextual recommendation engine
-│   │       ├── search/route.js         # Unified stream & channel search
-│   │       └── streams/route.js        # Live streams directory
+│   │   ├── kick/
+│   │   │   ├── channel/route.js        # Official Kick channel profile proxy
+│   │   │   ├── related/route.js        # Contextual recommendation engine
+│   │   │   ├── search/route.js         # Unified stream & channel search
+│   │   │   └── streams/route.js        # Live streams directory
+│   │   └── youtube/
+│   │       └── resolve/route.js        # YouTube URL parser & oEmbed metadata endpoint
 │   ├── multi-view/
 │   │   └── page.jsx                    # Multi View workspace page
 │   ├── privacy/
@@ -116,6 +125,7 @@ StreamView/
 │   │   └── structured-data.jsx         # Schema.org JSON-LD structured data
 │   ├── home/                           # Landing hero, preview arena, features, CTA
 │   ├── kick/                           # Sandboxed Kick iframe video player
+│   ├── youtube/                        # Official privacy-enhanced YouTube embed player
 │   ├── layout/                         # Responsive Navbar & Footer
 │   └── multiview/                      # Stage View, Equal Grid, Drawer, Workspace
 ├── lib/
@@ -124,10 +134,12 @@ StreamView/
 │   │   ├── search.js                   # Live stream search with Yatra engine
 │   │   ├── yatra.js                    # Self-learning Yatra Roleplay engine
 │   │   └── streams.js                  # Kick API live stream fetchers
+│   ├── youtube/
+│   │   └── resolve.js                  # YouTube URL & oEmbed resolution library
 │   ├── config.js                       # Application constants & layout options
 │   ├── use-fullscreen.js               # HTML5 Fullscreen API hook
 │   └── utils.js                        # Tailwind class utilities
-├── package.json                        # Version 1.1.0 dependencies & scripts
+├── package.json                        # Version 1.4.0 dependencies & scripts
 └── tailwind.config.js                  # Custom theme colors, animations & shadows
 ```
 
@@ -204,10 +216,10 @@ npm run start
 
 ## ⚖️ Legal & Disclaimer
 
-**StreamView is an independent third-party application and is not affiliated with, endorsed by, or sponsored by Kick.**
+**StreamView is an independent third-party application and is not affiliated with, endorsed by, or sponsored by Kick or YouTube.**
 
-- All stream content, streamer logos, trademarks, and channel broadcasts are the property of their respective creators and Kick.
-- Video streams are embedded directly via Kick's official iframe player (`player.kick.com`). StreamView does not host, re-transmit, or modify video content.
+- All stream content, streamer logos, trademarks, and channel broadcasts are the property of their respective creators, Kick, and YouTube.
+- Video streams are embedded directly via Kick's official iframe player (`player.kick.com`) and YouTube's privacy-enhanced embed player (`youtube-nocookie.com`). StreamView does not host, re-transmit, or modify video content.
 
 ---
 

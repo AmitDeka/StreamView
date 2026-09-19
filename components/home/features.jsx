@@ -17,9 +17,9 @@ const FEATURES_LIST = [
   },
   {
     icon: MonitorPlay,
-    title: "Official Kick Embed Players",
+    title: "Official Kick & YouTube Embeds",
     description:
-      "Streams play directly inside Kick's official embeddable player. No video proxying, no stream tampering, and no video lag—just clean, synchronized multiple stream viewing.",
+      "Streams play directly inside official sandboxed embed players. No video proxying, no stream tampering, and no video lag—just clean, synchronized multiple stream viewing.",
     accent: "brand-pink",
   },
 ];
