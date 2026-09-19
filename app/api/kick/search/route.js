@@ -17,7 +17,11 @@ export async function GET(request) {
     const known = searchParams.get("known");
 
     if (known) {
-      const knownList = known.split(",").map((c) => c.trim().toLowerCase()).filter(Boolean);
+      const knownList = known
+        .split(",")
+        .map((c) => c.trim().toLowerCase())
+        .filter((c) => /^[a-zA-Z0-9_-]{1,50}$/.test(c))
+        .slice(0, 10);
       for (const ch of knownList) {
         rememberYatraChannel(ch);
       }
