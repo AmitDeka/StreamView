@@ -41,7 +41,7 @@ const DUMMY_STREAMS = [
 
 export function MultiViewPreview() {
   const [addedIds, setAddedIds] = useState(["dummy_1"]);
-  const [layoutMode, setLayoutMode] = useState("stage"); // "stage" or "grid"
+  const [layoutMode, setLayoutMode] = useState("stage");
   const [mainStageId, setMainStageId] = useState("dummy_1");
 
   const toggleStream = (id) => {
@@ -67,9 +67,9 @@ export function MultiViewPreview() {
     setLayoutMode("stage");
   };
 
-  const stream1 = DUMMY_STREAMS[0]; // PixelKnight
-  const stream2 = DUMMY_STREAMS[1]; // Officer_Vance
-  const stream3 = DUMMY_STREAMS[2]; // NeonViper
+  const stream1 = DUMMY_STREAMS[0];
+  const stream2 = DUMMY_STREAMS[1];
+  const stream3 = DUMMY_STREAMS[2];
 
   const isStream1Added = addedIds.includes(stream1.id);
   const isStream2Added = addedIds.includes(stream2.id);

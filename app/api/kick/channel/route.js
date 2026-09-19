@@ -22,7 +22,6 @@ export async function GET(request) {
 
     const cleanName = channelName.trim().toLowerCase();
 
-    // 1. Query official Kick Developer API first (bypasses Cloudflare block on Vercel)
     const stream = await getStreamByChannel(cleanName, true);
     if (stream) {
       return NextResponse.json(
@@ -42,7 +41,6 @@ export async function GET(request) {
       );
     }
 
-    // 2. Fallback to public channel endpoint if official API returned no record
     try {
       const res = await kickFetch(`https://kick.com/api/v2/channels/${encodeURIComponent(cleanName)}`, {
         timeout: 3500,
@@ -80,10 +78,8 @@ export async function GET(request) {
         );
       }
     } catch (e) {
-      // ignore public fallback error
     }
 
-    // 3. Fallback when channel is offline or not found
     return NextResponse.json(
       {
         success: true,

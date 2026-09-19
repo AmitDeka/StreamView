@@ -15,7 +15,6 @@ export function StreamTile({ stream, index, isSolo = false }) {
 
   if (!stream) return null;
 
-  // In Equal View, only 1 player has audio active by default (matching the 3:1 stage view)
   const effectiveAudioId = activeAudioId === "__muted_all__"
     ? null
     : (activeAudioId || selectedStreams[0]?.id || selectedStreams[0]?.channelName);

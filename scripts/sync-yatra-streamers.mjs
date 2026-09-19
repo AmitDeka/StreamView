@@ -6,7 +6,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DATA_FILE = path.resolve(__dirname, "../data/yatra-streamers.json");
 
-// Automatically load .env.local when running locally
 function loadEnvLocal() {
   const envPath = path.resolve(__dirname, "../.env.local");
   if (fs.existsSync(envPath)) {
@@ -96,7 +95,6 @@ function isGenuineYatraStream(stream) {
   return true;
 }
 
-// Kick OAuth token acquisition using client credentials
 async function getKickAppToken() {
   const clientId = process.env.KICK_CLIENT_ID;
   const clientSecret = process.env.KICK_CLIENT_SECRET;
@@ -133,7 +131,6 @@ async function getKickAppToken() {
   }
 }
 
-// Fetch official Kick developer API livestreams (no Cloudflare 403 on GitHub Actions)
 async function fetchKickApiLivestreams(url, token) {
   try {
     const controller = new AbortController();
@@ -160,7 +157,6 @@ async function fetchKickApiLivestreams(url, token) {
   }
 }
 
-// Fetch official Kick developer API channel
 async function fetchKickApiChannel(slug, token) {
   try {
     const clean = String(slug).trim().toLowerCase();
@@ -191,7 +187,6 @@ async function fetchKickApiChannel(slug, token) {
   }
 }
 
-// Fallback fetchers for unauthenticated environments
 async function fetchKickFeed(url) {
   try {
     const controller = new AbortController();
@@ -238,7 +233,6 @@ async function fetchChannelLivestream(slug) {
   }
 }
 
-// Known community candidates to verify directly if absent from roster
 const CANDIDATE_CHANNELS = [
   "shreeplayz",
   "gunshot",
@@ -285,7 +279,6 @@ async function run() {
   const currentSet = new Set(currentList.map((c) => String(c).trim().toLowerCase()));
   console.log(`Current roster has ${currentSet.size} creators.`);
 
-  // Candidates not in the current roster to probe directly
   const missingCandidates = CANDIDATE_CHANNELS.filter((c) => !currentSet.has(c));
 
   let allStreams = [];
@@ -366,7 +359,6 @@ async function run() {
   fs.writeFileSync(DATA_FILE, JSON.stringify(updatedList, null, 2) + "\n", "utf-8");
   console.log(`Successfully updated ${DATA_FILE} with ${updatedList.length} total creators.`);
 
-  // If in GitHub Actions, signal that changes occurred
   if (process.env.GITHUB_OUTPUT) {
     fs.appendFileSync(process.env.GITHUB_OUTPUT, `updated=true\ncount=${discovered.size}\n`);
   }

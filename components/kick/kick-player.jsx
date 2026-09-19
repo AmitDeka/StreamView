@@ -4,11 +4,6 @@ import { useState } from "react";
 import { KICK_PLAYER_BASE_URL } from "@/lib/config";
 import { Loader2 } from "lucide-react";
 
-/**
- * Official Kick Embed Player Component.
- * Receives channel/stream identifier and loads Kick's official embed iframe.
- * Does not proxy, restream, or manipulate the video stream.
- */
 export function KickPlayer({ channel, autoplay = true, muted = false, className = "" }) {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -20,7 +15,6 @@ export function KickPlayer({ channel, autoplay = true, muted = false, className 
     );
   }
 
-  // Clean channel name (remove any accidental whitespace or symbols)
   const cleanChannel = encodeURIComponent(channel.trim());
   const embedUrl = `${KICK_PLAYER_BASE_URL}/${cleanChannel}?autoplay=${autoplay}&muted=${muted}`;
 

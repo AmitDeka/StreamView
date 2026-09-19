@@ -12,17 +12,22 @@ import {
 
 export function BookmarkModal({ isOpen, onClose }) {
   const [copied, setCopied] = useState(false);
-  const [os, setOs] = useState("windows"); // "windows", "mac", "mobile"
+  const [os, setOs] = useState("windows");
   const [currentUrl, setCurrentUrl] = useState("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       setCurrentUrl(window.location.href);
       const ua = window.navigator.userAgent || "";
-      if (/Android|iPhone|iPad|iPod/i.test(ua)) {
-        setOs("mobile");
+      const isTouchMac = /Macintosh/i.test(ua) && Boolean(window.navigator?.maxTouchPoints && window.navigator.maxTouchPoints > 1);
+      if (/iPhone|iPad|iPod/i.test(ua) || isTouchMac) {
+        setOs("ios");
+      } else if (/Android/i.test(ua)) {
+        setOs("android");
       } else if (/Mac/i.test(ua)) {
         setOs("mac");
+      } else if (/Linux/i.test(ua)) {
+        setOs("linux");
       } else {
         setOs("windows");
       }
@@ -88,16 +93,56 @@ export function BookmarkModal({ isOpen, onClose }) {
           </div>
         </div>
 
+        {/* OS Selector Pills */}
+        <div className="flex items-center justify-center gap-1.5 mb-1">
+          {[
+            { id: "windows", label: "Windows" },
+            { id: "mac", label: "macOS" },
+            { id: "ios", label: "iOS" },
+            { id: "android", label: "Android" },
+            { id: "linux", label: "Linux" },
+          ].map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => setOs(item.id)}
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-all cursor-pointer ${
+                os === item.id
+                  ? "bg-brand-gold text-black shadow-sm"
+                  : "bg-surface-elevated text-text-muted hover:text-white border border-border/60"
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+
         {/* Shortcut Instruction Box */}
-        <div className="my-5 p-4 rounded-xl bg-surface-elevated border border-border/80 text-center">
-          {os === "mobile" ? (
+        <div className="my-4 p-4 rounded-xl bg-surface-elevated border border-border/80 text-center">
+          {os === "ios" ? (
             <div className="flex flex-col items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-surface-card border border-border flex items-center justify-center text-text-secondary">
+              <div className="w-8 h-8 rounded-lg bg-surface-card border border-border flex items-center justify-center text-brand-gold">
                 <Smartphone className="w-4 h-4" />
               </div>
               <p className="text-xs text-text-secondary leading-relaxed">
-                Tap your browser menu (<span className="font-semibold text-white">⋮</span> or{" "}
-                <span className="font-semibold text-white">Share</span>) and select{" "}
+                Tap the <span className="font-semibold text-white">Share button (⎋)</span> at the bottom of Safari, then select{" "}
+                <span className="font-semibold text-brand-gold">
+                  &quot;Add to Bookmarks&quot;
+                </span>{" "}
+                or{" "}
+                <span className="font-semibold text-brand-gold">
+                  &quot;Add to Home Screen&quot;
+                </span>
+                .
+              </p>
+            </div>
+          ) : os === "android" ? (
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-surface-card border border-border flex items-center justify-center text-brand-gold">
+                <Smartphone className="w-4 h-4" />
+              </div>
+              <p className="text-xs text-text-secondary leading-relaxed">
+                Tap your browser menu (<span className="font-semibold text-white">⋮</span> at the top right) and select{" "}
                 <span className="font-semibold text-brand-gold">
                   &quot;Add to Bookmarks&quot;
                 </span>{" "}

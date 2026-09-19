@@ -35,7 +35,6 @@ export function EmptyState() {
             const list = json.data || [];
             setStreams(list);
 
-            // Automatically remember any returned Yatra creators in localStorage
             for (const s of list) {
               const t = (s.title || "").toLowerCase();
               const tags = (s.tags || []).map((x) => String(x).toLowerCase());

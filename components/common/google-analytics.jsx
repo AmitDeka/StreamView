@@ -6,7 +6,6 @@ import { GA_TRACKING_ID } from "@/lib/config";
 export function GoogleAnalytics() {
   const gaId = process.env.NEXT_PUBLIC_GA_ID || GA_TRACKING_ID;
 
-  // Don't render analytics scripts if no measurement ID is provided
   if (!gaId || gaId.trim() === "") {
     return null;
   }

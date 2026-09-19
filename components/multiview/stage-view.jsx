@@ -24,13 +24,12 @@ export function StageView() {
   const mainStream = selectedStreams[0];
   const sideStreams = selectedStreams.slice(1);
   const totalCount = selectedStreams.length;
-  const isFourToSix = totalCount >= 4; // After 3 streams (4, 5, 6 streams): use current one!
+  const isFourToSix = totalCount >= 4;
   const isTwoStreams = totalCount === 2;
   const isSingleStream = totalCount === 1;
   const canAddMore = totalCount < 6;
   const isSixStreams = totalCount >= 6;
 
-  // Continuously sync left and right side boxes to the exact same height
   useEffect(() => {
     if (!leftStageRef.current) return;
 
@@ -58,9 +57,6 @@ export function StageView() {
     };
   }, [totalCount, isFourToSix, mainStream?.id]);
 
-  // Responsive stage vs sidecar ratios:
-  // - 1 to 3 streams: 3:1 flex ratio (Left 75%, Right 25%)
-  // - 4 to 6 streams: Current layout (Left ~55%, Right ~45% with 2-column grid)
   const leftWidthClass = isFourToSix
     ? "w-full lg:w-[55%] xl:w-[56%]"
     : "w-full lg:w-[75%]";
@@ -69,12 +65,6 @@ export function StageView() {
     ? "w-full lg:w-[45%] xl:w-[44%]"
     : "w-full lg:w-[25%]";
 
-  // Responsive height for right scrollable container:
-  // - After adding 6 streams: Expands to 82vh (capped at 760px on large displays) so the 3-row, 5-card grid is comfortable
-  // - 1 to 5 streams: Strictly synced to the Left Stage height
-  // Responsive height for right scrollable container:
-  // - On Mobile: Auto height with smooth horizontal scrolling strip
-  // - On Desktop (lg:): Synced to Left Stage height or 82vh when 6 streams
   const rightHeightClass = isSixStreams
     ? "h-auto max-h-none lg:h-[82vh] lg:max-h-[82vh] xl:max-h-[760px]"
     : "h-auto max-h-none lg:h-[var(--stage-height)] lg:max-h-[var(--stage-height)]";
@@ -245,14 +235,6 @@ export function StageView() {
   );
 }
 
-/**
- * SidecarTile renders an individual stream in the sidecar grid/column.
- * Supports:
- * - Desktop (>= 1024px): 16:9 widescreen video embed with KickPlayer
- * - Mobile (< 1024px): Touch-friendly preview with Tap-to-Swap (prevents browser freezing & data waste)
- * - Header Swap button to fill left main stage
- * - Direct stream removal
- */
 function SidecarTile({ stream, onFocus, onRemove }) {
   return (
     <div className="group relative flex flex-col rounded-xl overflow-hidden bg-surface-card border border-border/80 hover:border-brand-gold/70 hover:shadow-glow-gold transition-all duration-200 select-none shrink-0 w-[200px] xs:w-[220px] sm:w-[260px] lg:w-full">

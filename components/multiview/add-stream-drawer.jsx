@@ -28,13 +28,10 @@ export function AddStreamDrawer() {
   const [errorMsg, setErrorMsg] = useState("");
   const [isPending, startTransition] = useTransition();
 
-  // First streamer (reference stream is selectedStreams[0] or activeReferenceStream)
   const firstStream = selectedStreams[0] || activeReferenceStream;
 
-  // Extract signals from active reference stream
   const signals = extractDiscoverySignals(firstStream);
 
-  // Synchronize initial filter: defaults to All Related unless an explicit filter was requested
   useEffect(() => {
     if (isDrawerOpen) {
       setSearchQuery("");
@@ -43,7 +40,6 @@ export function AddStreamDrawer() {
     }
   }, [isDrawerOpen, activeDrawerFilter]);
 
-  // Fetch streams (debounced) whenever searchQuery or activeFilter changes
   useEffect(() => {
     if (!isDrawerOpen) return;
 
@@ -87,7 +83,6 @@ export function AddStreamDrawer() {
           const list = json.data || [];
           setStreams(list);
 
-          // Automatically persist any returned Yatra creators in localStorage
           for (const s of list) {
             const t = (s.title || "").toLowerCase();
             const tags = (s.tags || []).map((x) => String(x).toLowerCase());

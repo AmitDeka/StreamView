@@ -16,10 +16,9 @@ export function MultiViewProvider({ children }) {
   const [activeDrawerFilter, setActiveDrawerFilter] = useState("");
   const [maximizedStreamId, setMaximizedStreamId] = useState(null);
   const [targetSlotIndex, setTargetSlotIndex] = useState(null);
-  const [viewMode, setViewMode] = useState("stage"); // "stage" (featured left + right tiles) or "grid"
+  const [viewMode, setViewMode] = useState("stage");
   const [activeAudioId, setActiveAudioId] = useState(null);
 
-  // Restore session from localStorage on mount
   useEffect(() => {
     try {
       const savedStreams = localStorage.getItem(STORAGE_KEY);
@@ -42,21 +41,18 @@ export function MultiViewProvider({ children }) {
     }
   }, []);
 
-  // Persist streams to localStorage
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedStreams));
     } catch (e) {}
   }, [selectedStreams]);
 
-  // Persist layout to localStorage
   useEffect(() => {
     try {
       localStorage.setItem(LAYOUT_STORAGE_KEY, String(activeLayout));
     } catch (e) {}
   }, [activeLayout]);
 
-  // Continuously enrich selected streams with real Kick avatar/DP, live viewer count, and live title/category
   useEffect(() => {
     if (selectedStreams.length === 0) return;
 
@@ -112,12 +108,10 @@ export function MultiViewProvider({ children }) {
   const addStream = (stream) => {
     if (!stream) return false;
 
-    // Don't add duplicate channels
     if (selectedStreams.some(s => s.channelName.toLowerCase() === stream.channelName.toLowerCase())) {
       return false;
     }
 
-    // If a specific slot was targeted
     if (targetSlotIndex !== null && targetSlotIndex < selectedStreams.length) {
       setSelectedStreams(prev => {
         const updated = [...prev];
@@ -129,7 +123,6 @@ export function MultiViewProvider({ children }) {
     }
 
     if (selectedStreams.length >= activeLayout) {
-      // Auto upgrade layout if room exists up to 6
       if (activeLayout === 1) setActiveLayout(2);
       else if (activeLayout === 2) setActiveLayout(4);
       else if (activeLayout === 3) setActiveLayout(4);
@@ -180,10 +173,10 @@ export function MultiViewProvider({ children }) {
   const focusStream = (streamId) => {
     setSelectedStreams(prev => {
       const idx = prev.findIndex(s => s.id === streamId || s.channelName === streamId);
-      if (idx <= 0) return prev; // already at stage position (index 0)
+      if (idx <= 0) return prev;
       const updated = [...prev];
       const [moved] = updated.splice(idx, 1);
-      updated.unshift(moved); // move to front: instantly fills the left stage!
+      updated.unshift(moved);
       return updated;
     });
     setActiveReferenceIndex(0);

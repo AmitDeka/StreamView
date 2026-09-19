@@ -15,12 +15,10 @@ export function StreamGrid() {
     viewMode,
   } = useMultiView();
 
-  // If user selected Stage View (Main Left + Sidecar Right)
   if (viewMode === "stage" && !maximizedStreamId) {
     return <StageView />;
   }
 
-  // If a single stream is maximized to solo mode
   if (maximizedStreamId) {
     const soloStream = selectedStreams.find(
       (s) => s.id === maximizedStreamId || s.channelName === maximizedStreamId
@@ -48,10 +46,6 @@ export function StreamGrid() {
 
   const streamCount = selectedStreams.length;
 
-  // Responsive grid classes based on exact stream count for Equal layout:
-  // - Mobile (<640px): 1 column stacked (prevents video squishing, full width viewing)
-  // - Tablet (640px - 1024px): 2 columns (comfortable viewing, 50% width)
-  // - Desktop (>=1024px): 2 or 3 columns
   const getGridClasses = () => {
     switch (streamCount) {
       case 1:

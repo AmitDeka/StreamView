@@ -22,7 +22,6 @@ export function SearchTipBanner({ className = "", onExampleClick }) {
     try {
       localStorage.setItem("streamview_dismiss_search_tip", "true");
     } catch {
-      // ignore
     }
   };
 
