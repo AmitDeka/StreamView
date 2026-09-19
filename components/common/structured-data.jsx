@@ -6,7 +6,13 @@ export function StructuredData() {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": APP_NAME,
-      "alternateName": ["StreamView Kick", "StreamView Multi View", "Yatra RP Multi View"],
+      "alternateName": [
+        "StreamView Kick",
+        "StreamView Multi View",
+        "Yatra RP Multi View",
+        "Kick and YouTube Multi Stream",
+        "StreamView Live"
+      ],
       "url": APP_URL,
       "description": APP_DESCRIPTION,
       "potentialAction": {
@@ -23,9 +29,9 @@ export function StructuredData() {
       "@type": "WebApplication",
       "name": APP_NAME,
       "url": APP_URL,
-      "description": "Watch multiple Kick live streams simultaneously in an adaptive multi-view interface. Dedicated to the Yatra RP community.",
+      "description": "Watch multiple Kick live streams and YouTube broadcasts simultaneously in an adaptive multi-view interface. Built for the gaming and Yatra RP community.",
       "applicationCategory": "MultimediaApplication",
-      "genre": "Gaming, Esports, Roleplay",
+      "genre": "Gaming, Esports, Roleplay, Live Streaming",
       "operatingSystem": "All",
       "browserRequirements": "Requires JavaScript. Compatible with Chrome, Safari, Firefox, Edge.",
       "offers": {

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "StreamView - Watch Multiple Kick Streams Together | Dedicated to Yatra RP";
+export const alt = "StreamView - Watch Multiple Kick & YouTube Streams Together | Multi View Workspace";
 export const size = {
   width: 1200,
   height: 630,
@@ -72,7 +72,7 @@ export default async function Image() {
             marginBottom: "24px",
           }}
         >
-          Watch Multiple Kick Streams Together
+          Watch Multiple Kick & YouTube Streams Together
         </div>
 
         {/* Dedication Badge */}

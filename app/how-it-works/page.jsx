@@ -20,14 +20,14 @@ import { APP_NAME, APP_URL } from "@/lib/config";
 export const metadata = {
   title: "How It Works · Backend Discovery Engine & Architecture | StreamView",
   description:
-    "Explore how StreamView's dual discovery engine, automated crawler, and official Kick embed architecture power real-time multi-view streaming for the Yatra Roleplay community.",
+    "Explore how StreamView's dual discovery engine, live crawler, YouTube stream resolver, and official embed architecture power real-time multi-view streaming for the gaming and Yatra Roleplay community.",
   alternates: {
     canonical: `${APP_URL}/how-it-works`,
   },
   openGraph: {
     title: "How StreamView Works · Backend Architecture & Stream Discovery",
     description:
-      "A technical walkthrough of how StreamView automatically discovers live Yatra Roleplay creators on Kick (even with 1 viewer), filters external servers, and powers multi-stream viewing.",
+      "A technical walkthrough of how StreamView automatically discovers live creators across Kick and YouTube, filters external servers, and powers multi-stream viewing.",
     url: `${APP_URL}/how-it-works`,
     siteName: APP_NAME,
     type: "article",
