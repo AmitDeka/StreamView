@@ -4,7 +4,6 @@ export function StreamCard({
   stream,
   isSelected = false,
   onSelect,
-  onTagClick,
   disabled = false,
 }) {
   if (!stream) return null;
@@ -34,7 +33,11 @@ export function StreamCard({
 
 
         {/* Live Status Badge */}
-        {stream.isLive ? (
+        {stream.platform === "youtube" ? (
+          <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#FF0000] text-white font-extrabold text-[10px] tracking-wider uppercase shadow-md">
+            <span>YouTube</span>
+          </div>
+        ) : stream.isLive ? (
           <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-live text-white font-extrabold text-[10px] tracking-wider uppercase shadow-md">
             <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
             <span>LIVE</span>

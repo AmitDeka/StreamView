@@ -22,10 +22,8 @@ import {
 export function MultiViewWorkspace() {
   const {
     selectedStreams,
-    activeReferenceStream,
     openDrawer,
     clearAllStreams,
-    activeLayout,
     viewMode,
     setViewMode,
   } = useMultiView();
@@ -109,6 +107,11 @@ export function MultiViewWorkspace() {
                     <span className="font-bold text-xs sm:text-sm text-text-primary truncate">
                       {mainStream.channelName}
                     </span>
+                    {mainStream.platform === "youtube" && (
+                      <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-[#FF0000] text-white shrink-0">
+                        YT
+                      </span>
+                    )}
                     <span className="text-[10px] sm:text-[11px] px-1.5 sm:px-2 py-0.5 rounded bg-surface-elevated text-brand-gold border border-brand-gold/30 shrink-0 font-medium">
                       {mainStream.category}
                     </span>

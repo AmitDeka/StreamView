@@ -1,8 +1,6 @@
 import Link from "next/link";
 import {
-  Sparkles,
   Server,
-  Search,
   Bot,
   ShieldCheck,
   Zap,
@@ -15,7 +13,6 @@ import {
   LayoutGrid,
   Filter,
   Eye,
-  Database,
   Cpu,
 } from "lucide-react";
 import { APP_NAME, APP_URL } from "@/lib/config";

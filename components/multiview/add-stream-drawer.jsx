@@ -1,13 +1,24 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useMultiView } from "./multiview-context";
 import { StreamCard } from "./stream-card";
 import { extractDiscoverySignals } from "@/lib/discovery/signals";
 import { TRENDING_TAGS } from "@/lib/config";
 import { SearchTipBanner } from "@/components/common/search-tip-banner";
 import { getKnownYatraParam, saveYatraChannel } from "@/lib/discovery/client-storage";
-import { X, Search, Sparkles, Hash, Gamepad2, Loader2, Check, Radio, Flame, User } from "lucide-react";
+import { X, Search, Sparkles, Hash, Gamepad2, Loader2, Check, Radio, Flame, Plus } from "lucide-react";
+import { extractYouTubeVideoId } from "@/lib/youtube/resolve";
+
+function isYouTubeInput(str) {
+  if (!str) return false;
+  const s = String(str).trim();
+  return (
+    s.includes("youtube.com") ||
+    s.includes("youtu.be") ||
+    Boolean(extractYouTubeVideoId(s))
+  );
+}
 
 export function AddStreamDrawer() {
   const {
@@ -18,16 +29,21 @@ export function AddStreamDrawer() {
     removeStream,
     activeReferenceStream,
     activeDrawerFilter,
-    activeLayout,
   } = useMultiView();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("");
   const [streams, setStreams] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [limit, setLimit] = useState(20);
   const [errorMsg, setErrorMsg] = useState("");
-  const [isPending, startTransition] = useTransition();
+  const [ytStream, setYtStream] = useState(null);
+  const [isYtResolving, setIsYtResolving] = useState(false);
+  const [ytError, setYtError] = useState("");
 
+  const prevQueryFilterRef = useRef("");
   const firstStream = selectedStreams[0] || activeReferenceStream;
 
   const signals = extractDiscoverySignals(firstStream);
@@ -37,15 +53,87 @@ export function AddStreamDrawer() {
       setSearchQuery("");
       const defaultFilter = activeDrawerFilter || "";
       setActiveFilter(defaultFilter);
+      setLimit(20);
+      setHasMore(true);
+      prevQueryFilterRef.current = `|${defaultFilter.trim()}`;
+      setYtStream(null);
+      setIsYtResolving(false);
+      setYtError("");
     }
   }, [isDrawerOpen, activeDrawerFilter]);
+
+  useEffect(() => {
+    const trimmed = searchQuery.trim();
+    if (!isDrawerOpen || !isYouTubeInput(trimmed)) {
+      setYtStream(null);
+      setIsYtResolving(false);
+      setYtError("");
+      return;
+    }
+
+    let isMounted = true;
+    setIsYtResolving(true);
+    setYtError("");
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/youtube/resolve?url=${encodeURIComponent(trimmed)}`);
+        const json = await res.json();
+        if (isMounted) {
+          if (json.success && json.data) {
+            setYtStream(json.data);
+            setYtError("");
+          } else {
+            setYtStream(null);
+            setYtError(json.error || "Could not resolve YouTube stream from this link");
+          }
+        }
+      } catch (err) {
+        if (isMounted) {
+          setYtStream(null);
+          setYtError("Failed to resolve YouTube stream");
+        }
+      } finally {
+        if (isMounted) {
+          setIsYtResolving(false);
+        }
+      }
+    }, 280);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
+  }, [isDrawerOpen, searchQuery]);
 
   useEffect(() => {
     if (!isDrawerOpen) return;
 
     let isMounted = true;
     setErrorMsg("");
-    setIsLoading(true);
+
+    const currentKey = `${searchQuery.trim()}|${activeFilter.trim()}`;
+    const isNewFilter = prevQueryFilterRef.current !== currentKey;
+    if (isNewFilter) {
+      prevQueryFilterRef.current = currentKey;
+      if (limit !== 20) {
+        setLimit(20);
+      }
+    }
+
+    if (searchQuery && isYouTubeInput(searchQuery)) {
+      setIsLoading(false);
+      setIsLoadingMore(false);
+      return;
+    }
+
+    const currentLimit = isNewFilter ? 20 : limit;
+
+    if (currentLimit === 20) {
+      setIsLoading(true);
+    } else {
+      setIsLoadingMore(true);
+    }
 
     const hasSearch = Boolean(searchQuery.trim());
     const hasFilter = Boolean(activeFilter.trim());
@@ -58,21 +146,21 @@ export function AddStreamDrawer() {
         
         let url = "";
         if (hasSearch) {
-          url = `/api/kick/search?q=${encodeURIComponent(searchQuery.trim())}&exclude=${encodeURIComponent(
+          url = `/api/kick/search?q=${encodeURIComponent(searchQuery.trim())}&limit=${currentLimit}&exclude=${encodeURIComponent(
             excludeList.join(",")
           )}${knownQuery}`;
         } else if (hasFilter) {
           const refChannel = firstStream?.channelName || activeReferenceStream?.channelName || "";
           url = `/api/kick/related?channel=${encodeURIComponent(
             refChannel
-          )}&filter=${encodeURIComponent(activeFilter)}&exclude=${encodeURIComponent(
+          )}&filter=${encodeURIComponent(activeFilter)}&limit=${currentLimit}&exclude=${encodeURIComponent(
             excludeList.join(",")
           )}${knownQuery}`;
         } else {
           const refChannel = firstStream?.channelName || activeReferenceStream?.channelName || "";
           url = `/api/kick/related?channel=${encodeURIComponent(
             refChannel
-          )}&filter=&exclude=${encodeURIComponent(excludeList.join(","))}${knownQuery}`;
+          )}&filter=&limit=${currentLimit}&exclude=${encodeURIComponent(excludeList.join(","))}${knownQuery}`;
         }
 
         const res = await fetch(url);
@@ -82,6 +170,7 @@ export function AddStreamDrawer() {
         if (isMounted) {
           const list = json.data || [];
           setStreams(list);
+          setHasMore(list.length >= currentLimit);
 
           for (const s of list) {
             const t = (s.title || "").toLowerCase();
@@ -102,15 +191,16 @@ export function AddStreamDrawer() {
       } finally {
         if (isMounted) {
           setIsLoading(false);
+          setIsLoadingMore(false);
         }
       }
-    }, 280);
+    }, currentLimit === 20 ? 280 : 0);
 
     return () => {
       isMounted = false;
       clearTimeout(timeout);
     };
-  }, [isDrawerOpen, searchQuery, activeFilter, firstStream, activeReferenceStream, selectedStreams]);
+  }, [isDrawerOpen, searchQuery, activeFilter, limit, firstStream, activeReferenceStream, selectedStreams]);
 
   if (!isDrawerOpen) return null;
 
@@ -218,7 +308,10 @@ export function AddStreamDrawer() {
                     {/* All option */}
                     <button
                       type="button"
-                      onClick={() => setActiveFilter("")}
+                      onClick={() => {
+                        setActiveFilter("");
+                        setLimit(20);
+                      }}
                       className={`text-xs px-2.5 py-1 rounded-md font-medium transition-all shrink-0 ${
                         activeFilter === ""
                           ? "bg-brand-gold text-black font-bold shadow-sm"
@@ -238,6 +331,7 @@ export function AddStreamDrawer() {
                           onClick={() => {
                             setActiveFilter(isChipActive ? "" : chip.value);
                             setSearchQuery("");
+                            setLimit(20);
                           }}
                           className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-md font-medium transition-all shrink-0 ${
                             isChipActive
@@ -269,14 +363,18 @@ export function AddStreamDrawer() {
               onChange={(e) => {
                 setSearchQuery(e.target.value);
                 if (activeFilter) setActiveFilter("");
+                setLimit(20);
               }}
-              placeholder="Search by username, category, or #hashtag..."
+              placeholder="Search by username, #hashtag, or paste YouTube URL..."
               className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-surface-card border border-border/80 focus:border-brand-gold focus:outline-none focus:ring-1 focus:ring-brand-gold/60 text-xs sm:text-sm text-text-primary placeholder:text-text-muted"
             />
             {searchQuery && (
               <button
                 type="button"
-                onClick={() => setSearchQuery("")}
+                onClick={() => {
+                  setSearchQuery("");
+                  setLimit(20);
+                }}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 text-text-muted hover:text-white rounded-md transition-colors"
                 aria-label="Clear search"
               >
@@ -285,12 +383,81 @@ export function AddStreamDrawer() {
             )}
           </div>
 
+          {/* YouTube Paste Notice */}
+          <div className="flex items-center justify-between px-3 py-1.5 rounded-xl bg-surface-card border border-border/70 text-[11px] text-text-muted">
+            <span className="flex items-center gap-1.5 text-text-secondary font-medium truncate">
+              <span className="w-2 h-2 rounded-full bg-[#FF0000] shrink-0" />
+              <span className="truncate">Paste any YouTube live stream or video link</span>
+            </span>
+            <span className="text-text-muted text-[10px] shrink-0 hidden xs:inline ml-1">watch, youtu.be, /live</span>
+          </div>
+
+          {/* YouTube Resolving State */}
+          {isYtResolving && (
+            <div className="p-3.5 rounded-xl bg-surface-card border border-red-500/40 flex items-center justify-center gap-2.5 shadow-md">
+              <Loader2 className="w-4 h-4 text-[#FF0000] animate-spin" />
+              <span className="text-xs text-text-primary font-medium">
+                Resolving YouTube stream details...
+              </span>
+            </div>
+          )}
+
+          {/* YouTube Stream Detected Card */}
+          {ytStream && (
+            <div className="p-3.5 rounded-xl bg-surface-card border-2 border-red-500/60 shadow-lg flex flex-col gap-3">
+              <div className="flex items-start gap-3">
+                <div className="relative aspect-video w-32 rounded-lg overflow-hidden bg-black shrink-0">
+                  <img
+                    src={ytStream.thumbnailUrl}
+                    alt={ytStream.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-[#FF0000] text-white font-extrabold text-[9px] uppercase shadow-md">
+                    YouTube
+                  </div>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <span className="font-bold text-xs text-text-primary truncate block">
+                    {ytStream.channelName}
+                  </span>
+                  <p className="text-[11px] text-text-secondary line-clamp-2 mt-0.5" title={ytStream.title}>
+                    {ytStream.title}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                disabled={isFull}
+                onClick={() => {
+                  const added = addStream(ytStream);
+                  if (added) {
+                    setSearchQuery("");
+                    setYtStream(null);
+                    closeDrawer();
+                  }
+                }}
+                className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[#FF0000] hover:bg-[#CC0000] text-white text-xs font-bold transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                <Plus className="w-4 h-4 stroke-[3]" />
+                <span>{isFull ? "Multi View is Full (Max 6)" : "Add YouTube Stream to Grid"}</span>
+              </button>
+            </div>
+          )}
+
+          {/* YouTube Resolve Error */}
+          {ytError && isYouTubeInput(searchQuery) && (
+            <div className="p-3 rounded-xl bg-surface-card border border-red-500/40 text-xs text-red-400">
+              {ytError}
+            </div>
+          )}
+
           {/* Discovery Tip Banner */}
           <SearchTipBanner
             className="w-full"
             onExampleClick={(name) => {
               setSearchQuery(name);
               setActiveFilter("");
+              setLimit(20);
             }}
           />
 
@@ -313,6 +480,7 @@ export function AddStreamDrawer() {
                       setSearchQuery(tag);
                       setActiveFilter("");
                     }
+                    setLimit(20);
                   }}
                   className={`text-[11px] px-2.5 py-0.5 rounded-full transition-colors cursor-pointer shrink-0 ${
                     isActive
@@ -362,7 +530,10 @@ export function AddStreamDrawer() {
                   {activeFilter && (
                     <button
                       type="button"
-                      onClick={() => setActiveFilter("")}
+                      onClick={() => {
+                        setActiveFilter("");
+                        setLimit(20);
+                      }}
                       className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-brand-gold text-black text-xs font-bold hover:bg-brand-gold/90 transition-all shadow-sm"
                     >
                       Show All Related Streams
@@ -370,29 +541,61 @@ export function AddStreamDrawer() {
                   )}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {streams.map((stream) => {
-                    const isSelected = selectedStreams.some(
-                      (s) => s.id === stream.id || s.channelName.toLowerCase() === stream.channelName.toLowerCase()
-                    );
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {streams.map((stream) => {
+                      const isSelected = selectedStreams.some(
+                        (s) => s.id === stream.id || s.channelName.toLowerCase() === stream.channelName.toLowerCase()
+                      );
 
-                    return (
-                      <StreamCard
-                        key={stream.id || stream.channelName}
-                        stream={stream}
-                        isSelected={isSelected}
-                        disabled={!isSelected && isFull}
-                        onSelect={(st) => {
-                          if (isSelected) {
-                            removeStream(st.id);
-                          } else {
-                            addStream(st);
-                          }
-                        }}
-                      />
-                    );
-                  })}
-                </div>
+                      return (
+                        <StreamCard
+                          key={stream.id || stream.channelName}
+                          stream={stream}
+                          isSelected={isSelected}
+                          disabled={!isSelected && isFull}
+                          onSelect={(st) => {
+                            if (isSelected) {
+                              removeStream(st.id);
+                            } else {
+                              addStream(st);
+                            }
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+
+                  {/* Load More Streams Button */}
+                  {streams.length > 0 && (
+                    <div className="mt-4 flex flex-col items-center justify-center gap-1.5 pb-2">
+                      {hasMore ? (
+                        <button
+                          type="button"
+                          onClick={() => setLimit((prev) => prev + 20)}
+                          disabled={isLoadingMore}
+                          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-surface-card hover:bg-surface-hover border border-border/80 hover:border-brand-gold/50 text-text-primary text-xs font-semibold transition-all shadow-sm hover:shadow-glow-sm disabled:opacity-50 disabled:cursor-not-allowed group cursor-pointer"
+                        >
+                          {isLoadingMore ? (
+                            <>
+                              <Loader2 className="w-3.5 h-3.5 animate-spin text-brand-gold" />
+                              <span>Loading more streams...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles className="w-3.5 h-3.5 text-brand-gold group-hover:rotate-12 transition-transform" />
+                              <span>Load More Streams (+20)</span>
+                            </>
+                          )}
+                        </button>
+                      ) : (
+                        <p className="text-[11px] text-text-muted">
+                          All {streams.length} live streams loaded
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </>
               )}
             </div>
         </div>

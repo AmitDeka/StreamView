@@ -58,6 +58,7 @@ export function MultiViewProvider({ children }) {
 
     const refreshStreams = () => {
       selectedStreams.forEach(async (stream) => {
+        if (stream.platform === "youtube") return;
         try {
           const res = await fetch(`/api/kick/channel?name=${encodeURIComponent(stream.channelName)}`, {
             cache: "no-store",
@@ -103,12 +104,22 @@ export function MultiViewProvider({ children }) {
 
     const interval = setInterval(refreshStreams, 30000);
     return () => clearInterval(interval);
-  }, [selectedStreams.map((s) => s.channelName).join(",")]);
+  }, [selectedStreams.map((s) => s.id || s.channelName).join(",")]);
 
   const addStream = (stream) => {
     if (!stream) return false;
 
-    if (selectedStreams.some(s => s.channelName.toLowerCase() === stream.channelName.toLowerCase())) {
+    if (
+      selectedStreams.some((s) => {
+        if (stream.platform === "youtube" || s.platform === "youtube") {
+          return (
+            s.id === stream.id ||
+            (stream.youtubeVideoId && s.youtubeVideoId === stream.youtubeVideoId)
+          );
+        }
+        return s.channelName.toLowerCase() === stream.channelName.toLowerCase();
+      })
+    ) {
       return false;
     }
 

@@ -8,7 +8,6 @@ import { Plus } from "lucide-react";
 export function StreamGrid() {
   const {
     selectedStreams,
-    activeLayout,
     maximizedStreamId,
     toggleMaximizeStream,
     openDrawer,

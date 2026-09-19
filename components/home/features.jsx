@@ -1,4 +1,4 @@
-import { Sparkles, LayoutGrid, MonitorPlay, Zap } from "lucide-react";
+import { Sparkles, LayoutGrid, MonitorPlay } from "lucide-react";
 
 const FEATURES_LIST = [
   {

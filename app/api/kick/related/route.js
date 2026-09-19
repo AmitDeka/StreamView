@@ -13,6 +13,7 @@ export async function GET(request) {
     const activeFilter = searchParams.get("filter") || "";
     const activeQuery = searchParams.get("q") || "";
     const exclude = searchParams.get("exclude") ? searchParams.get("exclude").split(",") : [];
+    const limit = parseInt(searchParams.get("limit") || "20", 10);
     const known = searchParams.get("known");
 
     if (known) {
@@ -31,7 +32,7 @@ export async function GET(request) {
       activeFilter,
       activeQuery,
       excludeChannelNames: exclude,
-      limit: 20,
+      limit,
     });
 
     const signals = referenceStream ? extractDiscoverySignals(referenceStream) : null;
