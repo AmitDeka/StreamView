@@ -5,7 +5,7 @@ import { Footer } from "@/components/layout/footer";
 import { BookmarkFab } from "@/components/common/bookmark-fab";
 import { GoogleAnalytics } from "@/components/common/google-analytics";
 import { StructuredData } from "@/components/common/structured-data";
-import { APP_NAME, APP_TAGLINE, APP_DESCRIPTION, APP_URL, GA_TRACKING_ID } from "@/lib/config";
+import { APP_NAME, APP_URL, GA_TRACKING_ID } from "@/lib/config";
 
 const inter = Inter({
   subsets: ["latin"],

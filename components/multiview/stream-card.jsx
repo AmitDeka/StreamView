@@ -4,7 +4,6 @@ export function StreamCard({
   stream,
   isSelected = false,
   onSelect,
-  onTagClick,
   disabled = false,
 }) {
   if (!stream) return null;

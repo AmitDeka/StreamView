@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, LayoutGrid, Sparkles, Radio, Heart } from "lucide-react";
-import { APP_TAGLINE } from "@/lib/config";
+import { ArrowRight, LayoutGrid, Heart } from "lucide-react";
 
 export function HomeHero() {
   return (

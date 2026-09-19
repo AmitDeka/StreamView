@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef, useTransition } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useMultiView } from "./multiview-context";
 import { StreamCard } from "./stream-card";
 import { extractDiscoverySignals } from "@/lib/discovery/signals";
 import { TRENDING_TAGS } from "@/lib/config";
 import { SearchTipBanner } from "@/components/common/search-tip-banner";
 import { getKnownYatraParam, saveYatraChannel } from "@/lib/discovery/client-storage";
-import { X, Search, Sparkles, Hash, Gamepad2, Loader2, Check, Radio, Flame, User } from "lucide-react";
+import { X, Search, Sparkles, Hash, Gamepad2, Loader2, Check, Radio, Flame } from "lucide-react";
 
 export function AddStreamDrawer() {
   const {
@@ -18,7 +18,6 @@ export function AddStreamDrawer() {
     removeStream,
     activeReferenceStream,
     activeDrawerFilter,
-    activeLayout,
   } = useMultiView();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,7 +28,6 @@ export function AddStreamDrawer() {
   const [hasMore, setHasMore] = useState(true);
   const [limit, setLimit] = useState(20);
   const [errorMsg, setErrorMsg] = useState("");
-  const [isPending, startTransition] = useTransition();
 
   const prevQueryFilterRef = useRef("");
   const firstStream = selectedStreams[0] || activeReferenceStream;

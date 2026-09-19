@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useMultiView } from "./multiview-context";
 import { StreamCard } from "./stream-card";
 import { TRENDING_TAGS } from "@/lib/config";
-import { Search, Sparkles, Flame, Loader2, User, Hash, Gamepad2, Heart } from "lucide-react";
+import { Search, Sparkles, Flame, Loader2, Heart } from "lucide-react";
 import { SearchTipBanner } from "@/components/common/search-tip-banner";
 import { getKnownYatraParam, saveYatraChannel } from "@/lib/discovery/client-storage";
 

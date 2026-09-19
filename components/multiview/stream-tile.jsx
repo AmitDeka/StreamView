@@ -5,7 +5,7 @@ import { useMultiView } from "./multiview-context";
 import { KICK_CHANNEL_BASE_URL } from "@/lib/config";
 import { X, ExternalLink, Volume2, VolumeX } from "lucide-react";
 
-export function StreamTile({ stream, index, isSolo = false }) {
+export function StreamTile({ stream, isSolo = false }) {
   const {
     removeStream,
     activeAudioId,

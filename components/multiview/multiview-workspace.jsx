@@ -22,10 +22,8 @@ import {
 export function MultiViewWorkspace() {
   const {
     selectedStreams,
-    activeReferenceStream,
     openDrawer,
     clearAllStreams,
-    activeLayout,
     viewMode,
     setViewMode,
   } = useMultiView();

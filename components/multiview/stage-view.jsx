@@ -10,7 +10,6 @@ import { KICK_CHANNEL_BASE_URL } from "@/lib/config";
 export function StageView() {
   const {
     selectedStreams,
-    activeLayout,
     focusStream,
     removeStream,
     openDrawer,
@@ -25,7 +24,6 @@ export function StageView() {
   const sideStreams = selectedStreams.slice(1);
   const totalCount = selectedStreams.length;
   const isFourToSix = totalCount >= 4;
-  const isTwoStreams = totalCount === 2;
   const isSingleStream = totalCount === 1;
   const canAddMore = totalCount < 6;
   const isSixStreams = totalCount >= 6;
