@@ -10,11 +10,11 @@
 - **Official Player Integration**: Embeds official Kick video players directly with no stream proxying or tampering.
 
 ## Key URLs
-- Home: https://streamview.in/
-- Multi View Workspace: https://streamview.in/multi-view
-- How It Works: https://streamview.in/how-it-works
-- Terms of Service: https://streamview.in/terms
-- Privacy Policy: https://streamview.in/privacy
+- Home: https://www.streamview.in/
+- Multi View Workspace: https://www.streamview.in/multi-view
+- How It Works: https://www.streamview.in/how-it-works
+- Terms of Service: https://www.streamview.in/terms
+- Privacy Policy: https://www.streamview.in/privacy
 
 ## Technical Stack
 - Framework: Next.js 14 (App Router)

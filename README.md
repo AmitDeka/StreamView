@@ -10,7 +10,7 @@ StreamView is a modern, open-source web application engineered for roleplay comm
 [![React 18](https://img.shields.io/badge/React-18.3.1-blue?style=flat-square&logo=react)](https://react.js.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
-[![Live Demo](https://img.shields.io/badge/Live_Demo-streamview.in-brightgreen?style=flat-square)](https://streamview.in)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-streamview.in-brightgreen?style=flat-square)](https://www.streamview.in)
 
 ---
 
