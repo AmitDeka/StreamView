@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useMultiView } from "./multiview-context";
 import { StreamCard } from "./stream-card";
 import { TRENDING_TAGS } from "@/lib/config";
@@ -14,16 +14,35 @@ export function EmptyState() {
   const [activeTag, setActiveTag] = useState("");
   const [streams, setStreams] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [limit, setLimit] = useState(20);
 
   const term = (query || activeTag || "").trim();
+  const prevTermRef = useRef(term);
 
   useEffect(() => {
     let isMounted = true;
-    setIsLoading(true);
+    const isNewSearch = prevTermRef.current !== term;
+    if (isNewSearch) {
+      prevTermRef.current = term;
+      if (limit !== 20) {
+        setLimit(20);
+      }
+    }
+
+    const currentLimit = isNewSearch ? 20 : limit;
+
+    if (currentLimit === 20) {
+      setIsLoading(true);
+    } else {
+      setIsLoadingMore(true);
+    }
 
     const known = getKnownYatraParam();
-    const baseUrl = term ? `/api/kick/search?q=${encodeURIComponent(term)}` : `/api/kick/search?q=`;
+    const baseUrl = term
+      ? `/api/kick/search?q=${encodeURIComponent(term)}&limit=${currentLimit}`
+      : `/api/kick/search?q=&limit=${currentLimit}`;
     const url = known ? `${baseUrl}${baseUrl.includes("?") ? "&" : "?"}known=${encodeURIComponent(known)}` : baseUrl;
 
     const timer = setTimeout(async () => {
@@ -34,6 +53,7 @@ export function EmptyState() {
           if (isMounted) {
             const list = json.data || [];
             setStreams(list);
+            setHasMore(list.length >= currentLimit);
 
             for (const s of list) {
               const t = (s.title || "").toLowerCase();
@@ -47,15 +67,18 @@ export function EmptyState() {
       } catch (e) {
         console.warn("Failed to load live streams", e);
       } finally {
-        if (isMounted) setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+          setIsLoadingMore(false);
+        }
       }
-    }, term ? 250 : 0);
+    }, term && currentLimit === 20 ? 250 : 0);
 
     return () => {
       isMounted = false;
       clearTimeout(timer);
     };
-  }, [term]);
+  }, [term, limit]);
 
   return (
     <div className="w-full max-w-6xl mx-auto py-4 sm:py-10 px-2 sm:px-4 flex flex-col items-center text-center">
@@ -82,6 +105,7 @@ export function EmptyState() {
           onChange={(e) => {
             setQuery(e.target.value);
             if (activeTag) setActiveTag("");
+            setLimit(20);
           }}
           placeholder="Search by username, category, or #hashtag..."
           className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-surface-card border border-border/90 focus:border-brand-gold focus:ring-2 focus:ring-brand-gold/40 text-text-primary text-xs sm:text-base placeholder:text-text-muted shadow-2xl transition-all"
@@ -94,6 +118,7 @@ export function EmptyState() {
         onExampleClick={(name) => {
           setQuery(name);
           if (activeTag) setActiveTag("");
+          setLimit(20);
         }}
       />
 
@@ -116,6 +141,7 @@ export function EmptyState() {
                   setActiveTag(tag);
                   setQuery("");
                 }
+                setLimit(20);
               }}
               className={`text-[11px] sm:text-xs px-2.5 sm:px-3 py-1 rounded-full font-medium transition-all cursor-pointer shrink-0 ${
                 isActive
@@ -151,16 +177,46 @@ export function EmptyState() {
             </span>
           </div>
         ) : streams.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-            {streams.map((stream) => (
-              <StreamCard
-                key={stream.id || stream.channelName}
-                stream={stream}
-                isSelected={false}
-                onSelect={(st) => addStream(st)}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+              {streams.map((stream) => (
+                <StreamCard
+                  key={stream.id || stream.channelName}
+                  stream={stream}
+                  isSelected={false}
+                  onSelect={(st) => addStream(st)}
+                />
+              ))}
+            </div>
+
+            {/* Load More Streams Button */}
+            <div className="mt-8 flex flex-col items-center justify-center gap-2">
+              {hasMore ? (
+                <button
+                  type="button"
+                  onClick={() => setLimit((prev) => prev + 20)}
+                  disabled={isLoadingMore}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-surface-card hover:bg-surface-hover border border-border/80 hover:border-brand-gold/50 text-text-primary text-xs sm:text-sm font-semibold transition-all shadow-md hover:shadow-glow-sm disabled:opacity-50 disabled:cursor-not-allowed group cursor-pointer"
+                >
+                  {isLoadingMore ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-brand-gold" />
+                      <span>Loading more streams...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 text-brand-gold group-hover:rotate-12 transition-transform" />
+                      <span>Load More Streams (+20)</span>
+                    </>
+                  )}
+                </button>
+              ) : (
+                <p className="text-xs text-text-muted">
+                  All {streams.length} live streams loaded
+                </p>
+              )}
+            </div>
+          </>
         ) : (
           <div className="py-16 text-center text-text-muted">
             <p className="text-sm font-semibold text-text-primary mb-1">
