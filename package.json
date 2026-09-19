@@ -1,6 +1,6 @@
 {
   "name": "streamview",
-  "version": "1.4.0",
+  "version": "1.4.5",
   "description": "Discover related live Kick streams and YouTube broadcasts, and watch them simultaneously in an adaptive multi-view workspace using official embed players.",
   "author": "Amit Deka",
   "license": "MIT",
