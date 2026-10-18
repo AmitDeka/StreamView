@@ -2,6 +2,8 @@ name: Sync Yatra Streamers Roster
 
 on:
   schedule:
+    # 2:05 PM IST (08:35 UTC) - Early-afternoon stream wave
+    - cron: '35 8 * * *'
     # 7:35 PM IST (14:05 UTC) - Evening stream wave (bypasses top-of-hour queue)
     - cron: '5 14 * * *'
     # 9:35 PM IST (16:05 UTC) - Prime-time wave
